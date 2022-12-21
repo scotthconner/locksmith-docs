@@ -3,11 +3,11 @@
 ## Overview
 
 * [💡 Abstract](README.md)
-* [📽 Introduction](overview/introduction.md)
+* [📽 Introduction](overview/our-features.md)
 
 ## Architecture
 
-* [🔑 Key Management](architecture/key-management/README.md)
+* [🔑 Key Management](product-guides/making-a-post.md)
   * [🏦 Key Vault](architecture/key-management/key-vault.md)
   * [🔓 Locksmith](architecture/key-management/locksmith.md)
 * [🏦 Asset Management](architecture/asset-management/README.md)
@@ -25,11 +25,10 @@
 * [🕵 Agents](architecture/agents/README.md)
   * [🧙♂ Wallet Creator](architecture/agents/wallet-creator.md)
 
-## Fundamentals
+## Team
 
-* [🛠 Getting set up](fundamentals/getting-set-up/README.md)
-  * [📝 Setting permissions](fundamentals/getting-set-up/setting-permissions.md)
-  * [🧑 Inviting Members](fundamentals/getting-set-up/inviting-members.md)
+* [🛤 Roadmap](team/roadmap.md)
+* [🛠 About the Team](team/about-the-team.md)
 
 ## Use Cases
 
