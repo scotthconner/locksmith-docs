@@ -20,4 +20,6 @@ Solutions vary and some include removing the use of private key altogether. Exam
 
 Others will encrypt and store your private key and offer retrieval and decrypt workflows with various features. Private key storage and retrieval isn't always flexible enough for some circumstances. For example, if a private key is compromised and the key holder has to switch their private key and move assets. Or, if proceeds in an inheritance scenario have multiple beneficiaries a third party must be trusted to properly distribute the assets according to a will.
 
+In both cases if the private key is compromised, the entire portfolio is compromised. For sophisticated users, this problem occurs with each active wallet in use.
+
 The pain of balancing usability with security persists.
