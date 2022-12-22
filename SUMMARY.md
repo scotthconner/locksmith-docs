@@ -16,7 +16,7 @@
 * [💎 Collateral Providers](architecture/collateral-providers/README.md)
   * [🔷 Ether Vault](architecture/collateral-providers/ether-vault.md)
   * [🪙 Token Vault](architecture/collateral-providers/token-vault.md)
-* [🪦 Scribes](architecture/scribes/README.md)
+* [✒ Scribes](architecture/scribes/README.md)
   * [🛡 Trustee](architecture/scribes/trustee.md)
 * [⚡ Events](architecture/events/README.md)
   * [📜 Event Log](architecture/events/event-log.md)
@@ -28,7 +28,7 @@
 ## Team
 
 * [🛤 Roadmap](team/roadmap.md)
-* [🛠 About the Team](team/about-the-team.md)
+* [🛠 About the Team](fundamentals/getting-set-up/README.md)
 
 ## Use Cases
 

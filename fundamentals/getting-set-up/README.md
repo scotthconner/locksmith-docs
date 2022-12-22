@@ -1,4 +1,4 @@
-# 🛠 Getting set up
+# 🛠 About the Team
 
 <details>
 

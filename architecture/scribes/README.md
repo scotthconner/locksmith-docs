@@ -1,2 +1,2 @@
-# 🪦 Scribes
+# ✒ Scribes
 
