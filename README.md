@@ -14,7 +14,7 @@ If a user is simply buying and holding crypto assets for a long time it could en
 
 For more sophisticated users, managing crypto assets is harder. Keeping cold storage cold,  managing burner wallets and browser extensions, tracking funds across DeFi protocols, and interacting with new contracts safely all come with their own challenges and trade-offs.
 
-The private keys in both scenarios remain the critical challenge - specifically when bringing others into the picture. Introducing inheritance, DeFi vendors, payment services, decentralized teams, or even unscrupulous smart contract owners all increase the surface area of private key exposure.
+The private keys in both scenarios remain the critical challenge - specifically when bringing others into the picture. Introducing inheritance, DeFi vendors, payment services, decentralized teams, or even unscrupulous smart contract owners all increase the surface area of private key exposure and wallet risk.
 
 Solutions vary and some include removing the use of private key altogether. Examples include centralized exchanges, custodial outfits, and other wallets with off-chain identity verification techniques. These often come with operational trade-offs like centralization, KYC, withdrawal limits, or service level agreements.&#x20;
 

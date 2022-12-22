@@ -1,4 +1,4 @@
-# 🔑 Key Management
+# 📪 Making a post
 
 ## Step 1 - Start journalling
 
