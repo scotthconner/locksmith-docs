@@ -17,7 +17,10 @@ A novel solution would then have the following traits:
 
 ## Introducing Locksmith Smart Wallet
 
-The Locksmith Smart Wallet is built of composable units that orchestrate into a secure on-chain, fully self custody wallet with programmable traits.
+The Locksmith Smart Wallet is a composable and extensible wallet that uses semi-fungible NFTs as wallet permissions instead of validating private key signatures directly. This enables a host of unique features that address pain-points of today's wallets:
+
+1. **Private Key Agnostic:** Access to funds is based on the valid possession of an NFT "Key." EOA or CA actors can access the wallet similarly as long as their public address holds the proper NFT key. In essence it enables many valuable features of [account abstraction](https://blog.pantherprotocol.io/ethereum-account-abstraction-everything-you-need-to-know/).
+2. **Distributed Asset Management:** Assets no longer have to reside at a singular EOA address and signed with the same private key. The assets can be secured.&#x20;
 
 ### Key Management
 
@@ -34,13 +37,13 @@ Keys can be held by end users in traditional wallets, ledgers, browser plug-ins,
 
 ### Asset and Collateral Management
 
-To overcome the challenge of using EOA private-keys to secure asset possession the Locksmith wallet provides a composable on-chain wallet protocol that tracks and maintains balances and access rights for all on-chain assets.
+To overcome the challenge of using EOA private-keys to secure asset possession, the Locksmith wallet provides a composable on-chain wallet protocol that tracks and maintains balances and access rights for all on-chain assets.
 
 **Ledger**
 
 All on-chain assets have a unique identifier called the Asset Resource Name (ARN).  It is a keccak256 hash of the contract address of the token (or 0x0 for gas), the token standard (20/721/1155/etc), and the token ID, and thus unique by asset type.
 
-All assets are tracked via their ARN and have withdrawal rights that are associated with Locksmith keys.&#x20;
+All assets are tracked via their ARN and have withdrawal rights that are associated with Locksmith keys. All deposits are by default granted to the wallet's root key.
 
 #### Notary
 
