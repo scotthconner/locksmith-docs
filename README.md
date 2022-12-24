@@ -22,4 +22,4 @@ Other solutions may encrypt and store your private key, offering retrieval and d
 
 In both cases if the private key is compromised, the entire portfolio is compromised. For sophisticated users, this problem occurs with each active wallet in use. In both cases, you also have to trade-off between self-custody and programmability/automation.
 
-The pain of balancing usability with security persists for all crypto users.
+The pain of balancing usability with security persists for all crypto users.&#x20;
