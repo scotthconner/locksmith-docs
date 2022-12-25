@@ -60,7 +60,25 @@ The ledger tracks assets that are held at a specific trusted addresses. The tota
 * Token Vault - An on-chain ERC20 token vault that takes deposits and services withdrawals for valid keys as determined by the wallet's ledger.&#x20;
 * NFT Vaults (Coming soon) - ERC721 and 1155 NFT vaults. Enable wallet key deposit and transfers, hold NFTs and delegate the airdrop.
 
+Wallet users will trust individual collateral providers to their notary with a root key transaction, followed by the collateral provider claiming to have deposited funds on behalf of their wallet key.&#x20;
+
+The interface and interactions are open and extensible for additional providers to hold, deposit, and facilitate asset transfer with their own contracts. This unlocks a singular wallet experience encompassing portfolio of financial activity that could be vaulted, collateralized, staked, or loaned out.
+
 #### Scribes
 
-Wallet owners can allow programatic access to re-distribute funds..
+Wallet owners can allow programatic access to re-distribute funds between keys. By default, the platform includes a program that enables a specific key-holder to move funds from the root key to a restricted list of keys, called "Trustee".
+
+The programatic interface between the notary and the ledger is robust enough to easily handle additional use cases as single permission-less smart contract deployment:
+
+* **Key Recovery:** Enable users to claim a recipient address for a specific key with a given code word and with required key approvals.&#x20;
+* **Recurring Payments:** On a repeating time basis, move funds from one key to another given a sufficient key balance. Provide others mutable access to claim withdrawal rights from the appropriate collateral provider. Enable others to withdrawal directly from the origin of the funds with initiating transfer with a private key signature. Unlocks allowance, timed inheritance, vesting schedules, monthly bill payments, etc.
+* **Cross-Lock Transfers:** Ability to transfer between keys across locksmith wallets. In this scenario, the sender and recipient are on the same ledger and can move funds between their own key rights without actually moving the funds on-chain at the collateral provider.&#x20;
+
+#### Events
+
+#### Agents
+
+
+
+
 
