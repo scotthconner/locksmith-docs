@@ -17,7 +17,13 @@ A novel solution would then have the following traits:
 
 ## Introducing Locksmith Smart Wallet
 
-The Locksmith Smart Wallet is built of composable units that orchestrate into a secure on-chain, fully self custody wallet with programmable traits.
+The Locksmith Smart Wallet is a composable and extensible wallet that uses semi-fungible NFTs as wallet permissions instead of validating private key signatures against a specific wallet address. This enables a host of unique features that address pain-points of today's wallets:
+
+1. **Private Key Agnostic:** Wallet action requires valid possession of the proper NFT "Key." Externally Owned Address (EOA) or Contract Addresses (CA) actors can access the wallet similarly as long as their public address holds the proper NFT key. This in essence enables many valuable features of [account abstraction](https://blog.pantherprotocol.io/ethereum-account-abstraction-everything-you-need-to-know/). The NFTs can be "[soul-bound](https://vitalik.ca/general/2022/01/26/soulbound.html)" to a specific address to prevent phishing, exploits, or scams.
+2. **Distributed Asset Management:** Assets no longer have to reside at a singular EOA or CA address, but rather can be composed and orchestrated across any trusted collateral provider.
+3. **Automation:** Funds and permissions can be safely transferred, made available for specific recipients, and utilized against the wallet without your signature or gas fees. ****&#x20;
+4. **Deposit Control:** Prevent deposits, dusts, and scams from specific senders or token types.
+5. **Open Development:** Commitment to composability enables developers to build and extend the wallet API to provide further automation and features on-chain and without permission.
 
 ### Key Management
 
