@@ -11,7 +11,7 @@ In order to make progress on the usability and security challenges of managing c
 A novel solution would then have the following traits:
 
 1. **On-chain.** Do not rely on centralized off-chain actors, companies, custodial outfits, "Web2" based services, servers, or deployments.
-2. **Self custodial.** Maintain full control of and visibility into your assets at all times without enabling long standing approval permissions.
+2. **Self custodial.** Maintain full control of and visibility into your assets at all times, where-ever they are, without enabling long standing approval permissions.
 3. **Recoverable.** Losing a private key, or leaving crypto-assets as inheritance through a will needs to be secure and reliable. This includes cases where assets are staked, locked up, loaned, borrowed, etc.
 4. **Extensible.** Users should not be limited in what they can do, and should enable others to securely interact with their funds. ****&#x20;
 
