@@ -17,13 +17,13 @@ A novel solution would then have the following traits:
 
 ## Introducing Locksmith Smart Wallet
 
-The Locksmith Smart Wallet uses semi-fungible NFTs as wallet permissions instead of validating private key signatures from a specific wallet address to access or move funds. This enables a host of unique features that address pain-points of today's wallets:
+The Locksmith Smart Wallet uses semi-fungible NFTs as wallet permissions and stores your assets on-chain. This enables a host of unique features that address pain-points of today's wallets:
 
-1. **Private Key Agnostic:** Locksmith wallet actions require valid possession of the proper NFT "Key." Externally Owned Address (EOA) or Contract Address (CA) actors can access the wallet similarly as long as their public address holds the proper NFT key. This in essence enables many valuable features of [account abstraction](https://blog.pantherprotocol.io/ethereum-account-abstraction-everything-you-need-to-know/). The NFTs can be optionally and mutably "[soul-bound](https://vitalik.ca/general/2022/01/26/soulbound.html)" to a specific address to prevent phishing, exploits, scams, pawning, or loaning against.
+1. **Private Key Agnostic:** Locksmith wallet actions require valid possession of the proper NFT "Key." Externally Owned Address (EOA) or Contract Address (CA) actors can access the wallet similarly as long as their public address holds the proper NFT key. This in essence enables many valuable features of [account abstraction](https://blog.pantherprotocol.io/ethereum-account-abstraction-everything-you-need-to-know/). The NFTs can be optionally and mutably "[soul-bound](https://vitalik.ca/general/2022/01/26/soulbound.html)" to a specific address to prevent phishing, exploits, scams, pawning, or loaning against. The importance of any one individual private key diminishes as long as you can maintain control of your root key.
 2. **Distributed Asset Management:** Assets no longer have to reside at a singular EOA or CA address, but rather can be composed and orchestrated across any trusted collateral provider.
-3. **Automation:** Funds and permissions can be safely transferred, made available for specific recipients, and spent from the wallet without your signature or gas fees. ****&#x20;
+3. **Automation:** Funds and permissions can be safely transferred, made available for specific recipients, and spent from the wallet without requiring your immediate signature or associated gas fees. ****&#x20;
 4. **Deposit Control:** Prevent deposits, dusts, and scams from specific senders or token types.
-5. **Open Development:** Commitment to composability enables developers to build and extend the wallet API to provide further automation and features on-chain.
+5. **Open Development:** Commitment to composability enables developers to build and extend the wallet API to provide further automation and features on-chain and without permission.
 
 The Locksmith Wallet's application of semi-fungible NFTs, on-chain collateral storage, and account abstraction produce a secure, configurable, and extensible wallet experience and platform.
 
@@ -38,7 +38,7 @@ The wallet is created when a user creates their own **root** key. A root key hol
 3. **Burn:** They can burn any currently minted key.&#x20;
 4. **Soulbind:** Root key holders can bind and unbind keys. Soulbound keys cannot be moved, sent, or stolen.
 
-Keys can be held by end users in traditional wallets, on hardware ledgers, browser plug-ins, or any on-chain contract willing to accept and hold it for use. The capabilities and permissions of the key are managed by the root key holder at all times.
+Keys can be held by end users in traditional wallets, hardware ledgers, browser plug-ins, or any on-chain contract willing to accept and hold it for use. The capabilities and permissions of the key are managed by the root key holder at all times.
 
 ### Asset and Collateral Management
 
@@ -62,9 +62,9 @@ The ledger tracks assets that are held at a specific trusted addresses. The tota
 * Token Vault - An on-chain ERC20 token vault that takes deposits and services withdrawals for valid keys as determined by the wallet's ledger.&#x20;
 * NFT Vaults (Coming soon) - ERC721 and 1155 NFT vaults. Enable wallet key deposit and transfers, hold NFTs and delegate airdrop registration claims, etc.
 
-Wallet users will trust individual collateral providers to their notary with a root key transaction, followed by the collateral provider claiming to have deposited funds on behalf of their wallet key. The wallet owner chooses which collateral provider to trust.
+Wallet users will trust individual collateral providers to their notary with a root key transaction, followed by the collateral provider claiming to have deposited funds on behalf of their wallet key. The wallet owner chooses which collateral provider to trust. All default Locksmith storage are secure and immutable smart contracts.
 
-A marketplace of collateral providers can now offer to hold, deposit, and facilitate asset transfer with their own contracts. This unlocks a singular wallet experience encompassing portfolio of financial activity that could be simply vaulted, collateralized, staked, or loaned out.
+A marketplace of collateral providers can now offer to hold, deposit, and facilitate asset transfer with their own contracts. This unlocks a singular wallet experience encompassing portfolio of financial activity that could be vaulted, collateralized, staked, or loaned out.
 
 #### Scribes
 
@@ -80,7 +80,7 @@ The programatic interface between the notary and the ledger is robust enough to 
 
 Standard wallets require your private key signature as well as funds in-wallet to send to someone else. While it's possible to withdrawal from on-chain exchanges directly to a recipient's address, today's world still ties the access to funds across on-chain repositories to public address and private key pairs.
 
-Locksmith wallet has created a few interfaces and patterns to enable your wallet to "work for you" while you are off-line and not signing transactions or spending gas. Notaries, Collateral Providers, and Scribes are all composable interfaces that can be swapped out to provide the wallet with a different permission model,  storage destination, or distribution scheme.
+Locksmith wallet has created a few interfaces and patterns to enable your wallet to "work for you" while you are off-line and not signing transactions or spending gas. Notaries, Collateral Providers, and Scribes are all composable interfaces that can be swapped out to provide the wallet with a different permission model, storage destination, or distribution scheme.
 
 To facilitate offline automation, the wallet API has provided a few patterns by default.
 
@@ -97,7 +97,10 @@ To register for a wallet, a dispatcher only has to be explicitly trusted to the 
 
 #### Agents
 
+Composability enables the ability to orchestrate workflows. Agents are a simple way of building small applications that result in novel wallet features.
 
+* **Virtual Wallet Addresses**: In-spite of where your assets are held, withdrawn, or sent from, continue to use a single public address for in and out-bound transactions.
+* **One-click Configuration:** Either for initial wallet set-up or adding extensions, compact the steps into a single transaction.
 
 
 
