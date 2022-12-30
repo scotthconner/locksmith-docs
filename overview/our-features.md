@@ -101,6 +101,7 @@ Composability enables the ability to orchestrate workflows. Agents are a simple 
 
 * **Virtual Wallet Addresses**: In-spite of where your assets are held, withdrawn, or sent from, continue to use a single public address for in and out-bound transactions.
 * **Multi-asset sends:** Send any mix of supported collateral and destinations in a single transaction, saving time and transaction inclusion overhead.
+* **Block Deposits:** Allow or deny list modes to control deposits based on sender or assets.
 * **Single Transaction workflows:** Either for initial wallet set-up or adding extensions, compact the steps into a single transaction.
 
 
