@@ -100,7 +100,10 @@ To register for a wallet, a dispatcher only has to be explicitly trusted to the 
 Composability enables the ability to orchestrate workflows. Agents are a simple way of building small applications that result in novel wallet features.
 
 * **Virtual Wallet Addresses**: In-spite of where your assets are held, withdrawn, or sent from, continue to use a single public address for in and out-bound transactions.
-* **One-click Configuration:** Either for initial wallet set-up or adding extensions, compact the steps into a single transaction.
+* **Multi-asset sends:** Send any mix of supported collateral and destinations in a single transaction, saving time and transaction inclusion overhead.
+* **Single Transaction workflows:** Either for initial wallet set-up or adding extensions, compact the steps into a single transaction.
+
+
 
 
 
