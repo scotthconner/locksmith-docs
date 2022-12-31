@@ -17,9 +17,11 @@ A novel solution would then have the following traits:
 
 ## Introducing Locksmith Smart Wallet
 
-The Locksmith Smart Wallet uses semi-fungible NFTs as wallet permissions and stores your assets on-chain. This enables a host of unique features that address pain-points of today's wallets:
+The Locksmith Smart Wallet uses semi-fungible NFTs as wallet permissions and stores your assets on-chain. In essence it acts similar to an on-chain Bank Account, where NFT possession in a "traditional" wallet is akin to holding a credit card. In this way, Locksmith Wallet doesn't replace your existing wallet, but compliments it.
 
-1. **Private Key Agnostic:** Locksmith wallet actions require valid possession of the proper NFT "Key." Externally Owned Address (EOA) or Contract Address (CA) actors can access the wallet similarly as long as their public address holds the proper NFT key. This in essence enables many valuable features of [account abstraction](https://blog.pantherprotocol.io/ethereum-account-abstraction-everything-you-need-to-know/). The NFTs can be optionally and mutably "[soul-bound](https://vitalik.ca/general/2022/01/26/soulbound.html)" to a specific address to prevent phishing, exploits, scams, pawning, or loaning against. The importance of any one individual private key diminishes as long as you can maintain control of your root key.
+This enables a host of unique features that address pain-points of today's wallets:
+
+1. **Private Key Agnostic:** Locksmith wallet actions require valid possession of the proper NFT "Key." Externally Owned Address (EOA) or Contract Address (CA) actors can access the wallet similarly as long as their public address holds the proper NFT key. This in essence enables many valuable features of [account abstraction](https://blog.pantherprotocol.io/ethereum-account-abstraction-everything-you-need-to-know/). The NFTs can be optionally and mutably "[soul-bound](https://vitalik.ca/general/2022/01/26/soulbound.html)" to a specific address to prevent phishing, exploits, scams, pawning, or loaning against. The importance of any one individual private key diminishes as long as you can maintain control of your root NFT.
 2. **Distributed Asset Management:** Assets no longer have to reside at a singular EOA or CA address, but rather can be composed and orchestrated across any trusted collateral provider.
 3. **Automation:** Funds and permissions can be safely transferred, made available for specific recipients, and spent from the wallet without requiring your immediate signature or associated gas fees. ****&#x20;
 4. **Deposit Control:** Prevent deposits, dusts, and scams from specific senders or token types.
