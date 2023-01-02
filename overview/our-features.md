@@ -35,7 +35,7 @@ The Locksmith Wallet's application of semi-fungible NFTs, on-chain collateral st
 
 ### Key Management
 
-Instead of requiring a private key signature with assets in-wallet to do business, the Locksmith Wallet provides access to deposits, withdrawal, distributions, delegation access, and event triggering through the valid possession of a specific [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) NFT token minted by the wallet owner.
+Instead of requiring a private key signature with assets in-wallet to do business, the Locksmith Wallet provides access to deposits, withdrawal, distributions, delegation access, dApp interactions, and event triggering through the valid possession of a specific [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) NFT token minted by the wallet owner.
 
 The wallet is created when a user creates their own **root** key. A root key holder has unilateral permission to manage the full life-cycle of other keys for their wallet:
 
