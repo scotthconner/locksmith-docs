@@ -4,7 +4,7 @@ description: The Locksmith Wallet White Paper
 
 # 💡 Abstract
 
-This document describes a system that utilizes ERC-1155 NFT standards to model and secure permissions for an extensible on-chain smart wallet platform.
+This document describes a virtual wallet that utilizes ERC-1155 NFT standards to model and secure permissions for an extensible on-chain smart wallet platform.
 
 ### Problem Statement
 
