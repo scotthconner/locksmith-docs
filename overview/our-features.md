@@ -37,28 +37,30 @@ The Locksmith Wallet's application of semi-fungible NFTs, on-chain collateral st
 
 Instead of requiring a private key signature with assets in-wallet to do business, the Locksmith Wallet provides access to deposits, withdrawal, distributions, delegation access, dApp interactions, and event triggering through the valid possession of a specific [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) NFT token minted by the wallet owner.
 
-The wallet is created when a user creates their own **root** key. A root key holder has unilateral permission to manage the full life-cycle of other keys for their wallet:
+The wallet is created when a user mints their own **root** key. A root key holder has unilateral permission to manage the full life-cycle of other keys for their wallet:
 
 1. **Create:** Root key holders can create additional unique ERC-1155 keys to hold, or distribute to others, or embed into contracts.&#x20;
 2. **Copy:** Root key holders can copy any existing or extinct keys.
-3. **Burn:** They can burn any currently minted key.&#x20;
+3. **Burn:** They can burn any currently minted key in existence.&#x20;
 4. **Soulbind:** Root key holders can bind and unbind keys. Soulbound keys cannot be moved, sent, or stolen.
 
-Keys can be held by end users in traditional wallets, hardware ledgers, browser plug-ins, or any on-chain contract willing to accept and hold it for use. The capabilities and permissions of the key are managed by the root key holder at all times.
+Keys can be held by end users in traditional wallets, hardware ledgers, browser plug-ins, or any on-chain contract willing to accept and hold it for use. The capabilities and permissions of the key are managed by the root key holder at all times. Any wallet or contract that supports holding ERC1155 tokens is eligible.
 
 ### Asset and Collateral Management
 
-To overcome the challenge of using EOA private-keys to secure asset possession, the Locksmith wallet provides a composable on-chain wallet protocol that maintains balances and access rights for all on-chain assets.
+The solution needs to support extensibility for all potential assets and business logic while maintaining security. The Locksmith Virtual Wallet provides a composable on-chain wallet protocol that maintains balances and access rights for all on-chain assets.
+
+It does this through multiple trusted platform actors: the Ledger and Notary, as well as actors trusted by the wallet owner: Collateral Providers and Scribes.
 
 **Ledger**
 
 All on-chain assets have a unique identifier called the Asset Resource Name (ARN).  It is a keccak256 hash of the contract address of the token (or 0x0 for gas), the token standard (20/721/1155/etc), and the token ID, and thus unique by asset type.
 
-All assets are tracked via their ARN and have withdrawal rights that are associated with Locksmith keys.
+All asset are tracked via their ARN, location, and Locksmith Key withdrawal rights.
 
 #### Notary
 
-Any assets that that are deposited, re-distributed to key-holders, or withdrawn must be approved by the wallet's programmable Notary**,** whose wishes are controlled by the root key holder. &#x20;
+Any assets that that are deposited, re-distributed to key-holders, or withdrawn must be approved by the wallet's programmable Notary**,** whose wishes are controlled by the root key holder.
 
 #### Collateral Providers
 
@@ -74,7 +76,7 @@ A marketplace of collateral providers can now offer to hold, deposit, and facili
 
 #### Scribes
 
-Wallet owners can allow programatic access to re-distribute funds between keys. By default, the platform includes a program that enables a specific key-holder to move funds from the root key to a restricted list of keys, called "Trustee".
+Wallet owners can allow programatic access to re-distribute existing funds between keys. By default, the platform includes a program that enables a specific key-holder to move funds from the root key to a restricted list of keys, called "Trustee".
 
 The programatic interface between the notary and the ledger is robust enough to easily handle additional use cases deployed as a single permission-less smart contract:
 
@@ -86,9 +88,9 @@ The programatic interface between the notary and the ledger is robust enough to 
 
 Standard wallets require your private key signature as well as funds in-wallet to send to someone else. While it's possible to withdrawal from on-chain exchanges directly to a recipient's address, today's world still ties the access to funds across on-chain repositories to public address and private key pairs.
 
-Locksmith wallet has created a few interfaces and patterns to enable your wallet to "work for you" while you are off-line and not signing transactions or spending gas. Notaries, Collateral Providers, and Scribes are all composable interfaces that can be swapped out to provide the wallet with a different permission model, storage destination, or distribution scheme.
+Locksmith wallet has created a few interfaces and patterns to enable your wallet to "work for you" while you are off-line and not signing transactions or spending gas that doesn't relying on centralized relayers. Collateral Providers and Scribes are composable interfaces that can be swapped out to provide the wallet with a different permission model, storage destination, or distribution scheme.
 
-To facilitate offline automation, the wallet API has provided a few patterns by default.
+To facilitate "offline" automation, the wallet API has provided a few patterns by default.
 
 #### Events
 
