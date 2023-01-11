@@ -49,3 +49,5 @@ There are a few known trade-offs that at this point:
 
 Below is a logical view of the contracts, and where they sit in the Locksmith Virtual Wallet application stack. Further portions of this document will describe each of them in  detail.
 
+<figure><img src="../.gitbook/assets/Locksmith Architecture.svg" alt=""><figcaption></figcaption></figure>
+
