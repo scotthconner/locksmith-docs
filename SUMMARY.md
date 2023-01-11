@@ -7,6 +7,7 @@
 
 ## Architecture
 
+* [🗺 Overview](architecture/overview.md)
 * [🔑 Key Management](product-guides/making-a-post.md)
   * [🏦 Key Vault](architecture/key-management/key-vault.md)
   * [🔓 Locksmith](architecture/key-management/locksmith.md)
