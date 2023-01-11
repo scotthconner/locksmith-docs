@@ -28,7 +28,7 @@ This is why the `Locksmith` and the `KeyVault` are not a single ERC1155 contract
 
 &#x20;It's also why the `Notary` takes trusted public addresses for `Scribes` and `Dispatchers` instead of Locksmith key requirements. In this case, the Root key holder entrusting the address is the initial pledge that matters in that transaction. Requiring that the operator holds a key is a decision deferred to the logic of the trusted address.
 
-### High Level Layout
+### Architectural Features
 
 The design decisions results in a few characteristics that define much of its operation:
 
@@ -36,5 +36,16 @@ The design decisions results in a few characteristics that define much of its op
 2. **Clear Security Model.** The sequence of "external actors" is clear - the wallet owner trusts everything an individual contract depends on, and each contract's operational role to distrust all external input.&#x20;
 3. **Iterative Orchestration.** Each contract leverages the power of those below it and thus more sophisticated features are often contracts with little logic and state, but many dependencies.
 
+### Known Trade-Offs
 
+There are a few known trade-offs that at this point:
+
+1. **Gas-less transactions.** Without a relayer or a functioning EIP-4337 environment, the best we would be able to do here is automatically refunding your traditional wallet at the end of any virtual wallet transaction. For sustainability reasons, paying your own gas is a trade-off for full de-centralization.
+2. **Storage Costs.** Wallet storage, while minimal - does cost gas. There isn't a centralized server running a wallet indexer and serving it up easily so some gas is taken to store valuable data for introspection later. This gas cost is a two way door with initial upgradeability to eliminate storage requirements. To foster an environment that may not need on-chain storage, the program is also thoroughly designed to be able to completely re-build the entire on-chain state from reading events.
+3. **Deployment Costs.** In combination with initial upgradeable contracts, having multiple composable and orchestrated contract deployments could be cost prohibitive depending on the network environment.
+4. **RPC Load.** Balancing contract byte-code, and on-chain storage/gas costs with the need to serve a full application of the contract APIs leads to some short but plentiful roundtrips to the node to read public view contract state.
+
+### Contract Platform Diagram
+
+Below is a logical view of the contracts, and where they sit in the Locksmith Virtual Wallet application stack. Further portions of this document will describe each of them in  detail.
 
