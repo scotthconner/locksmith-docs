@@ -1,13 +1,24 @@
+---
+description: Locksmith Trust Model makes the backbone of wallet security.
+---
+
 # 🔑 Key Management
 
-## Step 1 - Start journalling
+## Locksmith Trust Model
 
-Donec sed odio dui. Curabitur blandit tempus porttitor. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Donec ullamcorper nulla non metus auctor fringilla. Maecenas sed diam eget risus varius blandit sit amet non magna. Aenean lacinia bibendum nulla sed consectetur.
+Locksmith uses a singleton ERC-1155 token contract to model permissions called the "Key Vault", and another contract, called the "Locksmith," which adds a trust model on top of the permissions.
 
-![](https://images.unsplash.com/photo-1522881451255-f59ad836fdfb?crop=entropy\&cs=tinysrgb\&fm=jpg\&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHw0fHx3cml0ZXxlbnwwfHx8fDE2NjA1ODc5Nzk\&ixlib=rb-1.2.1\&q=80)
+Together, these two contracts deliver the Locksmith Trust Model:&#x20;
 
-## Step 2 - Create Post
+<figure><img src="../.gitbook/assets/Locksmith Architecture - Page 2.png" alt=""><figcaption><p>A wallet has a single root key.</p></figcaption></figure>
 
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Maecenas faucibus mollis interdum. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Donec ullamcorper nulla non metus auctor fringilla. Nullam quis risus eget urna mollis ornare vel eu leo. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+## Root Key
 
-![](https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?crop=entropy\&cs=tinysrgb\&fm=jpg\&ixid=MnwxOTcwMjR8MHwxfHNlYXJjaHw2fHxwb3N0fGVufDB8fHx8MTY2MDU4ODAzMg\&ixlib=rb-1.2.1\&q=80)
+A **root key** is generated when a caller invokes the Locksmith to create a new "Trust." By default, every new trust mints a root key. The root key provides permissions to the system that no other key can do on behalf of their trust:
+
+* Mint, copy, bind, or burn keys within the trust.
+* Register or de-register trusted Collateral Providers, Scribes, or Dispatchers with the Notary.
+* Create Key Inboxes and register them with the post office.
+* Set up rules within the Trustee, Alarm Clock, or Key Oracle feature contracts.
+
+In effect, the root key controls not only the set of active permissions themselves, but who has them, as well as what actors are capable of doing what within the system. In effect, the wallet bends to the will of any active root key holder.
