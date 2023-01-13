@@ -63,7 +63,8 @@ This method simply checks to make sure the caller is the locksmith, increments t
  * @param amount     the number of keys you want to mint to the receiver
  * @param data       the data field for the key
  */
- function mint(address receiver, uint256 keyId, uint256 amount, bytes calldata data) external {
+ function mint(address receiver, uint256 keyId, uint256 amount, bytes calldata data) 
+   external {
    require(locksmith == msg.sender, "NOT_LOCKSMITH");
    keySupply[keyId] += amount;
    _mint(receiver, keyId, amount, data);
@@ -71,6 +72,31 @@ This method simply checks to make sure the caller is the locksmith, increments t
 ```
 
 ### Soulbind
+
+This operation sets the soul-bound amount directly for a given key and holder. It checks to ensure the caller is the locksmith, sets the soulboundKeyAmounts, and emits an event.
+
+<pre class="language-solidity"><code class="lang-solidity"><strong>/**
+</strong> * soulbind
+ *
+ * 
+ * It is safest to soulbind in the same transaction as the minting.
+ * This function does not check if the keyholder holds the amount of
+ * tokens. And this function is SETTING the soulbound amount. It is
+ * not additive.
+ *
+ * @param keyHolder the current key-holder
+ * @param keyId     the key id to bind to the keyHolder
+ * @param amount    it could be multiple depending on the use case
+ */
+function soulbind(address keyHolder, uint256 keyId, uint256 amount) external {
+    // respect only the locksmith in this call
+    require(locksmith == msg.sender, "NOT_LOCKSMITH");
+
+    // here ya go boss
+    soulboundKeyAmounts[keyHolder][keyId] = amount;
+    emit setSoulboundKeyAmount(msg.sender, keyHolder, keyId, amount);
+}
+</code></pre>
 
 ### Burn
 
