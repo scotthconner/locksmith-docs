@@ -4,6 +4,12 @@ description: ERC1155 Contract with some flare
 
 # 🏦 Key Vault
 
+## Design Ethos
+
+The KeyVault contract is a simple ERC1155 contract that keeps a robust internal ledger of NFT supply and enforces soulbound requirements for token transfers. The goal was to separate the token way from the business logic of its use cleanly to keep concerns encapsulated.
+
+Another name for the contract could easily be `ERC1155SupplyTrackedSoulboundUpgradeable`, however `KeyVault` was chosen.
+
 The open alpha will leverage [ERC1155Upgradeable](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/master/docs/modules/ROOT/pages/erc1155.adoc) as well as [UUPSUpgradeable](https://docs.openzeppelin.com/contracts/4.x/api/proxy#UUPSUpgradeable) implementations from OpenZeppelin. The overall architecture will enable the developer to progressively lock each contract once we are confident they are stable. The typical lifecycle on deploying, upgrading, and managing that applies.
 
 Because this is an ERC1155 contract, each NFT or "Key" will have a unique ID modeled as a `uint256`.
@@ -100,3 +106,25 @@ function soulbind(address keyHolder, uint256 keyId, uint256 amount) external {
 
 ### Burn
 
+This operation enables the locksmith to burn any key. There is one exception to this in that we've empowered each key holder to be able to burn an unwanted key as long as it wasn't soulbound. This prevents accidental soul breaches through scammers, but also enables ring key holders to safely relinquish their own possession.
+
+Similarly to `mint`, it makes sure you are either the locksmith or the holder in question. Then, it manages the `keySupply` and  calls `_burn`.
+
+```solidity
+/**
+ * burn 
+ *
+ * @param holder     the address of the key holder you want to burn from
+ * @param keyId      the ERC1155 NFT ID you want to burn
+ * @param burnAmount the number of said keys you want to burn from the holder's possession.
+ */
+ function burn(address holder, uint256 keyId, uint256 burnAmount) external {
+     require(locksmith == msg.sender || holder == msg.sender, "NOT_LOCKSMITH_OR_HOLDER");
+     keySupply[keyId] -= burnAmount;
+     _burn(holder, keyId, burnAmount);
+  }
+```
+
+### BeforeTokenTransfer
+
+The KeyVault extends the typical `_beforeTokenTransfer` protocol on ERC1155. The first thing it ensures is the NFT transfer will not result in a state that violates the soulbound amount for the sending address and key type. It also updates the proper tallies in `addressKeys` and `keyHolders`.
