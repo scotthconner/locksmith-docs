@@ -8,9 +8,9 @@
 ## Architecture
 
 * [🗺 Overview](architecture/overview.md)
-* [🔑 Key Management](product-guides/making-a-post.md)
-  * [🏦 Key Vault](architecture/key-management/key-vault.md)
-  * [🔓 Locksmith](architecture/key-management/locksmith.md)
+* [🔑 Permissions](architecture/permissions/README.md)
+  * [🏦 Key Vault](architecture/permissions/key-vault.md)
+  * [🔓 Locksmith](architecture/permissions/locksmith.md)
 * [🏦 Asset Management](architecture/asset-management/README.md)
   * [🪶 Notary](architecture/asset-management/notary.md)
   * [📖 Ledger](architecture/asset-management/ledger.md)
