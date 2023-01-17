@@ -298,12 +298,13 @@ This method is called by the ledger when a scribe is attempting to re-distribute
 
 ### notarizeEventRegistration
 
-This method is called by the `TrustEventLog` to ensure that a dispatcher whom is registering an event is trusted by the specified wallet owner. This prevents spam, attacks, or otherwise random events from popping up in the event stream. In this implementation, two default dispachers are included (`KeyOracle` and `AlarmClock`).
+This method is called by the `TrustEventLog` to ensure that a dispatcher whom is registering an event is trusted by the specified wallet owner. This prevents spam, attacks, or otherwise random events from popping up in the event stream. In this implementation, two default dispachers are included (`KeyOracle` and `AlarmClock`)./\*\*
 
-<pre class="language-solidity"><code class="lang-solidity"><strong>/**
-</strong><strong> * notarizeEventRegistration
-</strong><strong> *
-</strong> * @param dispatcher  registration address origin
+```solidity
+/**
+ * notarizeEventRegistration
+ *
+ * @param dispatcher  registration address origin
  * @param trustId     the trust ID for the event
  * @param eventHash   the unique event identifier
  * @param description the description of the event
@@ -314,4 +315,4 @@ This method is called by the `TrustEventLog` to ensure that a dispatcher whom is
      require(actorRegistry[msg.sender][trustId][EVENT_DISPATCHER].contains(dispatcher),
          'UNTRUSTED_DISPATCHER');
  }
-</code></pre>
+```
