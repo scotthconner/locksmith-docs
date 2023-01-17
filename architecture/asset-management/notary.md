@@ -229,6 +229,35 @@ Below is also an internal method, `requireTrustedActor()`, that is used for mult
 
 ### notarizeWithdrawal
 
+The wallet's central ledger will call this for notarization when a collateral provider attempt to withdrawal to a wallet's ledger. This will fail if the key is invalid, the withdrawal allowance for that key holder, provider, and asset is insufficient or if the collateral provider is not trusted by the wallet's root key holder.&#x20;
 
+<pre class="language-solidity"><code class="lang-solidity"><strong> /**
+</strong><strong>  * notarizeWithdrawal
+</strong><strong>  *
+</strong>  * @param provider the provider that is trying to withdrawal
+  * @param keyId    key to withdrawal the funds from
+  * @param arn      asset resource hash of the withdrawn asset
+  * @param amount   the amount of that asset withdrawn.
+  * @return the valid trust ID for the key
+  */
+  function notarizeWithdrawal(
+      address provider,
+      uint256 keyId,
+      bytes32 arn,
+      uint256 amount
+  ) external returns (uint256) {
+      // make sure the key is valid and the provider is trusted
+      uint256 trustId = requireTrustedActor(keyId, provider, COLLATERAL_PROVIDER);
+
+      // make sure the withdrawal amount is approved by the keyholder
+      // and then reduce the amount
+      require(withdrawalAllowances[msg.sender][keyId][provider][arn] >= amount,
+          'UNAPPROVED_AMOUNT');
+      withdrawalAllowances[msg.sender][keyId][provider][arn] -= amount;
+      return trustId;
+ }
+</code></pre>
+
+### notarizeDistribution
 
 ### notarizeEventRegistration
