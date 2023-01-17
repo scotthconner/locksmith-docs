@@ -20,7 +20,9 @@ A novel solution would then have the following traits:
 
 The Locksmith Virtual Smart Wallet uses semi-fungible NFTs for role based access control and stores your assets on-chain. In essence it acts similar to an on-chain Bank Account, where NFT possession in a "traditional" wallet is akin to holding a credit card. In this way, Locksmith Wallet doesn't replace your existing wallet, but compliments it. This enables users of Metamask, Coinbase Wallet, WalletConnect, or any other wallet to adopt the Locksmith security paradigm without switching preferred or trusted wallet experiences, installing a new mobile app, or even generating a new private key to manage.
 
-Users hold Locksmith Keys (NFTs) in their traditional wallet. These NFTs act as a tokenized gate to virtualized wallet functionality configured by the virtual wallet owner.
+<figure><img src="../.gitbook/assets/Locksmith Architecture - Compliment.png" alt=""><figcaption></figcaption></figure>
+
+Users hold Locksmith Keys (NFTs) in their traditional wallet. These NFTs act as a tokenized gate to virtualized wallet functionality configured by the wallet owner.
 
 This enables a host of unique features that address pain-points of today's wallets:
 

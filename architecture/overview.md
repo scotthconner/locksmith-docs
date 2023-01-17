@@ -18,7 +18,7 @@ To reduce overall complexity and increase security, most of the smart contract s
 
 Each smart contract plays a defined role in the overall system, and thus contains the APIs needed to fully encapsulate the role but nothing more.&#x20;
 
-The design concept is also to be able to build a UX easily from a non-sophistcated client. This means that desired UX and workflow management needed to be accessible directly from public view functions on the smart contracts themselves.&#x20;
+The design concept is also to be able to build a UX easily from an unsophisticated client. This means that desired UX and workflow management needed to be accessible directly from public view functions on the smart contracts themselves.&#x20;
 
 Each contract maintains the unique state it needs to and avoids duplicating state from other actors by understanding dependencies at deployment.
 
@@ -36,7 +36,7 @@ The design decisions results in a few characteristics that define much of its op
 
 ## Known Trade-Offs
 
-There are a few known trade-offs that at this point:
+There are a few known trade-offs at this point:
 
 1. **Gas-less transactions.** Without a relayer or a functioning EIP-4337 environment, the best we would be able to do here is automatically refunding your traditional wallet at the end of any virtual wallet transaction. For sustainability reasons, paying your own gas is a trade-off for full de-centralization.
 2. **Storage Costs.** Wallet storage, while minimal - does cost gas. There isn't a centralized server running a wallet indexer and serving it up easily at the expense of investors. Thus, some gas is taken to store valuable data for introspection later. This gas cost is a two way door with initial upgradeability to eliminate storage requirements. To foster an environment that may not need on-chain storage, the program is also thoroughly designed to be able to completely re-build the entire on-chain state from reading emitted events.
