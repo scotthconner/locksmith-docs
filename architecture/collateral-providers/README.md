@@ -1,2 +1,2 @@
-# 💎 Collateral
+# 💎 Collateral Providers
 

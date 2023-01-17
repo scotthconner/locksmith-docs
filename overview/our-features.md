@@ -36,7 +36,7 @@ The Locksmith Wallet's application of semi-fungible NFTs, on-chain collateral st
 
 ### Key Management
 
-Instead of requiring a private key signature with assets in-wallet to do business, the Locksmith Wallet provides access to deposits, withdrawal, distributions, delegation access, dApp interactions, and event triggering through the valid possession of a specific [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) NFT token minted by the wallet owner.
+The Locksmith Wallet provides access to deposits, withdrawal, distributions, delegation access, dApp interactions, and event triggering through the valid possession of a specific [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) NFT token minted by the wallet owner.
 
 The wallet is created when a user mints their own **root** key. A root key holder has unilateral permission to manage the full life-cycle of other keys for their wallet:
 
@@ -65,7 +65,7 @@ Any assets that that are deposited, re-distributed to key-holders, or withdrawn 
 
 #### Collateral Providers
 
-The ledger tracks assets that are held at a specific trusted addresses. The total account is subdivided by the individual key withdrawal rights. By default, the platform supports:
+The ledger tracks assets that are held at a specific trusted addresses, called Collateral Providers. The total balance for a given account is subdivided by the individual key withdrawal rights. By default, the platform supports:
 
 * Ether Vault - An on-chain Ethereum vault that takes deposits and services withdrawals for valid keys as determined by the wallet's ledger.
 * Token Vault - An on-chain ERC20 token vault that takes deposits and services withdrawals for valid keys as determined by the wallet's ledger.&#x20;
@@ -77,7 +77,7 @@ A marketplace of collateral providers can now offer to hold, deposit, and facili
 
 #### Scribes
 
-Wallet owners can allow programatic access to re-distribute existing funds between keys. By default, the platform includes a program that enables a specific key-holder to move funds from one wallet key key to a restricted list of keys, called "Trustee".
+Root key holders can enable other contracts to move funds between wallet keys by trusted a contract called a Scribe. By default, the platform includes a program that enables a specific key-holder to move funds from one wallet key key to a restricted list of keys, called "Trustee".
 
 The programatic interface between the notary and the ledger is robust enough to easily handle additional use cases deployed as a single permission-less smart contract:
 
