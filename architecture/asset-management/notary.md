@@ -13,10 +13,12 @@ The Notary is designed to approve actions that operate on a wallet's state, like
 As of the first version, the Notary includes the following permissions:
 
 * **Collateral Providers:** Contract addresses that adhere to the `ICollateralProvider` interface and are trusted by the wallet's root key-holder to custody funds safely on-chain.
-* **Scribes:** Contract Addresses that are trusted to move funds between keys in a wallet.
-* **Dispatchers:** Contract addresses that are trusted to register and fire events within the wallet.
+* **Scribes:** Contract Addresses that are trusted to move funds on the `Ledger` between keys in a wallet.
+* **Dispatchers:** Contract addresses that are trusted to register and fire events within the wallet to the `TrustEventLog`.
 
-&#x20;
+These modules are entrusted by the root key holder to provide and extend the wallet's capacity to store, move, and automate funds.&#x20;
+
+<figure><img src="../../.gitbook/assets/Locksmith Architecture - Page 2 (1).png" alt=""><figcaption><p>Smart Contract interaction and trust model</p></figcaption></figure>
 
 ## Storage
 
