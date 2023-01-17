@@ -16,7 +16,7 @@ As of the first version, the Notary includes the following permissions:
 * **Scribes:** Contract Addresses that are trusted to move funds on the `Ledger` between keys in a wallet.
 * **Dispatchers:** Contract addresses that are trusted to register and fire events within the wallet to the `TrustEventLog`.
 
-These modules are entrusted by the root key holder to provide and extend the wallet's capacity to store, move, and automate funds.&#x20;
+These modules are entrusted by the root key holder to provide and extend the wallet's capacity to store, move, and automate funds. The same contract can hold multiple permissions but are acquired and set separately for composability.
 
 <figure><img src="../../.gitbook/assets/Locksmith Architecture - Page 2 (1).png" alt=""><figcaption><p>Smart Contract interaction and trust model</p></figcaption></figure>
 
