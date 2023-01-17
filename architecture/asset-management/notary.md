@@ -231,6 +231,8 @@ Below is also an internal method, `requireTrustedActor()`, that is used for mult
 
 The wallet's central ledger will call this for notarization when a collateral provider attempt to withdrawal to a wallet's ledger. This will fail if the key is invalid, the withdrawal allowance for that key holder, provider, and asset is insufficient or if the collateral provider is not trusted by the wallet's root key holder.&#x20;
 
+The notary does not check the ledger for sufficient balance. The ledger will fail to create a valid entry on its own. The notaries role is the ensure everything else is proper.
+
 <pre class="language-solidity"><code class="lang-solidity"><strong> /**
 </strong><strong>  * notarizeWithdrawal
 </strong><strong>  *
@@ -260,4 +262,56 @@ The wallet's central ledger will call this for notarization when a collateral pr
 
 ### notarizeDistribution
 
+This method is called by the ledger when a scribe is attempting to re-distribute funds amongst keys. The notarization will fail if the involved scribe or collateral provider isn't trusted, or if the keys do not all belong to the same ring.
+
+```solidity
+ /**
+  * notarizeDistribution
+  *
+  * @param scribe      the address of the scribe that is supposedly trusted
+  * @param provider    the address of the provider whose funds are to be moved
+  * @param arn         the arn of the asset being moved
+  * @param sourceKeyId the root key that the funds are moving from
+  * @param keys        array of keys to move the funds to
+  * @param amounts     array of amounts corresponding for each destination keys
+  * @return the trustID for the rootKey
+  */
+  function notarizeDistribution(address scribe, address provider, bytes32 arn,
+      uint256 sourceKeyId, uint256[] calldata keys, uint256[] calldata amounts) external returns (uint256) {
+
+      // the scribe needs to be trusted
+      uint256 trustId = requireTrustedActor(sourceKeyId, scribe, SCRIBE);
+
+      // we also want to make sure the provider is trusted
+      require(actorRegistry[msg.sender][trustId][COLLATERAL_PROVIDER].contains(provider),
+          'UNTRUSTED_PROVIDER');
+
+      // check to ensure the array sizes are 1:1
+      require(keys.length == amounts.length, "KEY_AMOUNT_SIZE_MISMATCH");
+
+      // this method will fully panic if its not valid.
+      locksmith.validateKeyRing(trustId, keys, true);
+
+      return trustId;
+  }
+```
+
 ### notarizeEventRegistration
+
+This method is called by the `TrustEventLog` to ensure that a dispatcher whom is registering an event is trusted by the specified wallet owner. This prevents spam, attacks, or otherwise random events from popping up in the event stream. In this implementation, two default dispachers are included (`KeyOracle` and `AlarmClock`).
+
+<pre class="language-solidity"><code class="lang-solidity"><strong>/**
+</strong><strong> * notarizeEventRegistration
+</strong><strong> *
+</strong> * @param dispatcher  registration address origin
+ * @param trustId     the trust ID for the event
+ * @param eventHash   the unique event identifier
+ * @param description the description of the event
+ */
+ function notarizeEventRegistration(address dispatcher, uint256 trustId, bytes32 eventHash, bytes32 description) external {
+     // we want to make sure the dispatcher is trusted
+     // note: here we are using the event log as the "ledger".
+     require(actorRegistry[msg.sender][trustId][EVENT_DISPATCHER].contains(dispatcher),
+         'UNTRUSTED_DISPATCHER');
+ }
+</code></pre>
