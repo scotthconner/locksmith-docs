@@ -73,6 +73,260 @@ The three-tiered structure provides the following immediate transaction guarante
 
 ## Storage
 
+The storage for the ledger is condensed into the three tiered objects that all store the same data structure, a CollateralProviderContext.
 
+```solidity
+// the ledger only respects the notary
+address public notary;
+
+// ledger context
+CollateralProviderLedger.CollateralProviderContext private ledgerContext;
+uint256 public constant LEDGER_CONTEXT_ID = 0;
+
+// trust context
+mapping(uint256 => CollateralProviderLedger.CollateralProviderContext) private trustContext;
+uint256 public constant TRUST_CONTEXT_ID = 1;
+
+// key context
+mapping(uint256 => CollateralProviderLedger.CollateralProviderContext) private keyContext;
+uint256 public constant KEY_CONTEXT_ID = 2;ol
+```
+
+### notary
+
+The Ledger is deloyed with the contract address of the Notary. This cannot be changed. Each operation that mutates the Ledger's balances in any way must be approved by the notary.
+
+### CollateralProviderContext
+
+The following data structure describes each context.
+
+```solidity
+struct CollateralProviderContext {
+        // all active arns in this context
+        EnumerableSet.Bytes32Set arnRegistry;
+
+        // all active collateral providers in this context
+        EnumerableSet.AddressSet collateralProviderRegistry;
+
+        // indexing: a list of arns per provider
+        mapping(address => EnumerableSet.Bytes32Set) providerArnRegistry;
+        // indexing: a list of providers per arn
+        mapping(bytes32 => EnumerableSet.AddressSet) arnProviderRegistry;
+
+        // context asset balance
+        mapping(bytes32 => uint256) contextArnBalances;
+        
+        // per-provider arn balance
+        mapping(address => mapping(bytes32 => uint256)) contextProviderArnBalances;
+}
+```
+
+### ledgerContext
+
+This context keeps track of the each per-asset obligation on each collateral provider for the entire ledger across all accounts. Both the Ledger and Collateral Provider check this resulting balance during a deposit or withdrawal to _verify_ accurate books and revert with solvency isn't met.
+
+### trustContext
+
+The trust model context keeps a tabulation of wallet-level balances per provider and asset summed across all keys in the collection. The ledger context should always be equal to or bigger than all wallet balances summed together.
+
+### keyContext
+
+The key context keeps track of the balance rights for a specific key ID on a per asset and collateral provider basis. The summation of all keys rights within a wallet's collection should equal exactly the wallet's balance for each asset.
 
 ## Operations
+
+There are a fair mix of introspection operations on top of the core ledger mutations. These include `getContextArnRegistry()`, `getContextProviderRegistry()`, `getContextArnBalances()`, `getContextBalanceSheet()`, and `getContextArnAllocations().`Each of these take a context level (0, 1, 2), and provide back ledger, wallet, or key level assets, providers, and balances in various forms.
+
+### deposit
+
+A collateral provider will call deposit when funds are deposited into a wallet owner's key account, either by a key-holder themselves in a vault-like situation, or as part of the operating agreement between the provider and the wallet owner (for instance, as part of a yield construct).
+
+All deposits for a given trust model must be approved by the Ledger's `Notary`. This ultimately means that the root key holder trusts the provider to store collateral.
+
+The returned vector can be used for inspection and reversion by the collateral provider for solvency guarantees.
+
+```solidity
+/**
+ * deposit
+ * 
+ * @param rootKeyId the root key to deposit the funds into
+ * @param arn       asset resource hash of the deposited asset
+ * @param amount    the amount of that asset deposited.
+ * @return final resulting provider arn balance for that key
+ * @return final resulting provider arn balance for that trust
+ * @return final resulting provider arn balance for the ledger
+ */
+ function deposit(uint256 rootKeyId, bytes32 arn, uint256 amount) external returns(uint256, uint256, uint256) {
+        // make sure the deposit is measurable
+        require(amount > 0, 'ZERO_AMOUNT');
+
+        // make sure the provider (the message sender) is trusted
+        uint256 trustId = INotary(notary).notarizeDeposit(msg.sender, rootKeyId, 
+               arn, amount);
+
+        // make the deposit at the ledger, trust, and key contexts
+        uint256 ledgerBalance = ledgerContext.deposit(msg.sender, arn, amount);
+        uint256 trustBalance  = trustContext[trustId].deposit(msg.sender, arn, amount);
+        uint256 keyBalance    = keyContext[rootKeyId].deposit(msg.sender, arn, amount);
+        
+        return (keyBalance, trustBalance, ledgerBalance);
+    }
+```
+
+The deposit method on the context objects are library functions on the struct:
+
+```solidity
+/**
+ * deposit
+ *
+ * Use this method to deposit funds from a collateral provider
+ * into a context.
+ *
+ * @param c        the context you want to deposit to
+ * @param provider the provider of the collateral
+ * @param arn      the arn you want to deposit
+ * @param amount   the amount of asset you want to deposit
+ * @return the context arn's resulting balance
+ */
+ function deposit(CollateralProviderContext storage c, address provider, bytes32 arn, uint256 amount) internal returns (uint256) {
+        // register the provider and the arn
+        c.collateralProviderRegistry.add(provider);
+        c.arnRegistry.add(arn);
+        c.providerArnRegistry[provider].add(arn);
+        c.arnProviderRegistry[arn].add(provider);
+
+        // add the amount to the context and provider totals
+        c.contextArnBalances[arn] += amount;
+        c.contextProviderArnBalances[provider][arn] += amount;
+
+        // invariant protection: the context balance should be equal or
+        // bigger than the provider's balance.
+        assert(c.contextArnBalances[arn] >= c.contextProviderArnBalances[provider][arn]);
+
+        return c.contextProviderArnBalances[provider][arn];
+ }
+```
+
+### withdrawal
+
+Similarly, when a collateral provider is servicing a withdrawal and wants to register the removal of funds with the ledger they call withdrawal. The notary must approve the withdrawal, which requires that the provider is trusted and that the key holder rights in question previously attested to this withdrawal amount.
+
+```solidity
+/**
+ * withdrawal
+ *
+ * @param keyId  key to withdrawal the funds from
+ * @param arn    asset resource hash of the withdrawn asset
+ * @param amount the amount of that asset withdrawn.
+ * @return final resulting provider arn balance for that key
+ * @return final resulting provider arn balance for that trust
+ * @return final resulting provider arn balance for the ledger
+ */
+ function withdrawal(uint256 keyId, bytes32 arn, uint256 amount) external returns(uint256, uint256, uint256) {
+     // make sure the withdrawal is measurable
+     require(amount > 0, 'ZERO_AMOUNT');
+
+     // make sure the withdrawal can be notarized with the key-holder
+     uint256 trustId = INotary(notary).notarizeWithdrawal(msg.sender, keyId, arn, 
+        amount);
+
+     // make the withdrawal at the ledger, trust, and key contexts
+     uint256 ledgerBalance = ledgerContext.withdrawal(msg.sender, arn, amount);
+     uint256 trustBalance  = trustContext[trustId].withdrawal(msg.sender, arn, amount);
+     uint256 keyBalance    = keyContext[keyId].withdrawal(msg.sender, arn, amount);
+
+     // invariant protection
+     assert((ledgerBalance >= trustBalance) && (trustBalance >= keyBalance));
+
+     return (keyBalance, trustBalance, ledgerBalance);
+ }
+```
+
+And similarly, the library function:
+
+```solidity
+/**
+ * withdrawal
+ *
+ *
+ * @param c        the context you want to withdrawal from
+ * @param provider the provider of the collateral
+ * @param arn      the arn you want to withdrawal
+ * @param amount   the amount of asset you want to remove
+ * @return the context arn's resulting balance
+ */
+ function withdrawal(CollateralProviderContext storage c, address provider, bytes32 arn, uint256 amount) internal returns (uint256) {
+        // make sure we are not overdrafting
+        require(c.arnRegistry.contains(arn) && 
+        c.contextProviderArnBalances[provider][arn] >= amount, "OVERDRAFT");
+
+        // remove the amount from the context and provider totals
+        c.contextArnBalances[arn] -= amount;
+        c.contextProviderArnBalances[provider][arn] -= amount;
+
+        // remove the arn from the provider arn registry if the amount is zero
+        if(c.contextProviderArnBalances[provider][arn] == 0) {
+            c.providerArnRegistry[provider].remove(arn);
+            c.arnProviderRegistry[arn].remove(provider);
+        }
+        // remove the arn from the registry if the amount is zero
+        if(c.contextArnBalances[arn] == 0) {
+            c.arnRegistry.remove(arn);
+        }
+
+        // invariant protection: the context balance should be equal or
+        // bigger than the provider's balance.
+        assert(c.contextArnBalances[arn] >= c.contextProviderArnBalances[provider][arn]);
+
+        return c.contextProviderArnBalances[provider][arn];
+}
+```
+
+### distribute
+
+Scribes call distribute when they want to re-arrange key rights for existing assets on the ledger. In this way, distributions are not withdrawals. Distributions must be notarized, which requires that the scribe is trusted by the root key holder, and that the distribution keys all belong to the same trust model.
+
+```solidity
+/**
+ * distribute
+ *
+ *
+ * @param provider    the provider we are moving collateral for
+ * @param arn         the asset we are moving
+ * @param sourceKeyId the source key we are moving funds from
+ * @param keys        the destination keys we are moving funds to
+ * @param amounts     the amounts we are moving into each key
+ * @return final resulting balance of that asset for the root key
+ */
+  function distribute(
+      address provider,
+      bytes32 arn,
+      uint256 sourceKeyId,
+      uint256[] calldata keys,
+      uint256[] calldata amounts
+  ) external returns (uint256) {
+      // notarize the distribution
+      uint256 trustId = INotary(notary).notarizeDistribution(
+          msg.sender, provider, arn, sourceKeyId, keys, amounts);
+
+      // service all the deposits to get the total
+      // final withdrawal sum
+      uint256 moveSum;
+      for(uint256 x = 0; x < keys.length; x++) {
+          // don't move any funds to same key
+          require(keys[x] != sourceKeyId, 'SELF_DISTRIBUTION');
+          
+          // move the funds if its greater than zero
+          if (amounts[x] > 0 ) {
+              keyContext[keys[x]].deposit(provider, arn, amounts[x]);
+              moveSum += amounts[x];
+          }
+      }
+
+      // attempt to withdrawal the funds from the source key
+      // and return the final resulting balance to the scribe
+      return keyContext[sourceKeyId].withdrawal(provider, arn, moveSum);
+  }
+```
+
+###
