@@ -286,6 +286,8 @@ And similarly, the library function:
 
 Scribes call distribute when they want to re-arrange key rights for existing assets on the ledger. In this way, distributions are not withdrawals. Distributions must be notarized, which requires that the scribe is trusted by the root key holder, and that the distribution keys all belong to the same trust model.
 
+Note that the distribution API takes a provider. Assets can only be atomically re-distributed inside of a given collateral provider. Moving collateral between providers requires a full withdrawal and a deposit at the new custody location. This use can be supported in a single transaction through a `VirtualKeyAddress` agent multi-call.
+
 ```solidity
 /**
  * distribute
