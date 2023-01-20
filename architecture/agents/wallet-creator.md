@@ -269,6 +269,38 @@ function acceptToken(address token, address provider) external requiresKey(keyId
 
 This method allows the key holder to call in and dynamically orchestrate multiple calls as a virtual identity. The key holder first prepares funds into the contract by specifying which assets should be made available. Then, once in the contract, the funds can be used by calls to execute as an abstracted account. This includes things like single-transaction swaps on Uniswap, among basically anything else valuable an account would want to do and compress into a single transaction.
 
+The function takes two structures - which include enough metadata to describe both the funds needed for the transactions as well as the encoded data for the function calls.
+
+```solidity
+/**
+ * FundingPreparation
+ *
+ * A funding preparation is a signal to the virtual address
+ * that your multi-call set will likely require funds to be
+ * in the Virtual address to successfully complete.
+ *
+ * The wallet should use this to help prep the contract balance
+ * for the rest of the calls.
+ */
+ struct FundingPreparation {
+    address provider;       // the address of the provider to use funds from.
+    bytes32 arn;            // the asset resource name of the asset in question
+    uint256 amount;         // the amount of the asset needed for the multi-call
+ }
+
+/**
+ * Call
+ *
+ * A call is simply a smart contract or send call you want to instruct
+ * the virtual address to complete on behalf of the key-holder.
+ */
+struct Call {
+    address target;         // the address you want to operate on
+    bytes   callData;       // Fully encoded call structure including function selector
+    uint256 msgValue;       // the message value to use when calling
+}
+```
+
 <pre class="language-solidity"><code class="lang-solidity"><strong> /**
 </strong><strong>  * multicall
 </strong><strong>  *
@@ -451,10 +483,75 @@ function deregisterInbox(uint256 ownerKeyId, address payable inbox) external {
 
 ## KeyAddressFactory
 
-
+This is a simple contract that, upon receiving a root key, will create a brand new contract using `CREATE2` to build a virtual address for a given key. It does this by using the root key to create a copy of the identity key, deploys the new contract, soulbinds the copied key to the new contract address, registers the address with the `PostOffice`, and then finally returns the root key to the message sender at the end of the transaction.
 
 ### Storage
 
+```
+IPostOffice public postOffice;
 
+struct InboxRequest {
+    uint256 virtualKeyId;
+    address defaultEthDepositProvider;
+}
+```
+
+#### postOffice
+
+This is a reference to the post office contract that the factory will use to register the inbox with.
+
+#### struct InboxRequest
+
+These two fields specify the request as serialized data along with sending the actual root key required to do the work in a single transaction. The `virtualKeyId` is the identity of the key that will be soulbound to the generated address, and the `defaultEthDepositProvider` is the trusted provider where gas will be sent when received.
 
 ### Operations
+
+There is only a single operation, `onERC1155Received`, and assumes the NFT sent into the contract belongs to a valid Locksmith.
+
+#### onERC1155Received
+
+```solidity
+function onERC1155Received(
+    address,
+    address from,
+    uint256 keyId,
+    uint256 count,
+    bytes memory data
+) public virtual override returns (bytes4) {
+    
+    // make sure the count is exactly 1 of whatever it is.
+    require(count == 1, 'IMPROPER_KEY_INPUT');
+
+    // recover the dependencies
+    IKeyVault keyVault = IKeyVault(msg.sender);
+    address locksmith = keyVault.locksmith();
+
+    // make sure the locksmith's between the Post Office
+    // and the key sent in are the same
+    require(locksmith == postOffice.locksmith(), 'LOCKSMITH_MISMATCH');
+
+    // grab the encoded information
+    InboxRequest memory request = abi.decode(data, (InboxRequest));
+
+    // deploy the implementation
+    address inbox = address(new VirtualKeyAddress());
+
+    // deploy the proxy, and call the initialize method through it
+    ERC1967Proxy proxy = new ERC1967Proxy(inbox,
+        abi.encodeWithSignature('initialize(address,address,uint256,uint256)',
+            locksmith, request.defaultEthDepositProvider, keyId, request.virtualKeyId));
+
+    // mint a soul-bound key into the new proxy
+    ILocksmith(locksmith).copyKey(keyId, request.virtualKeyId, address(proxy), true);
+
+    // add the proxy to the registry - this will revert
+    // the transaction if its a duplicate. this will also revert
+    // if the key configuration is bad for some reason.
+    postOffice.registerInbox(payable(proxy));
+
+    // send the key back!
+    IERC1155(msg.sender).safeTransferFrom(address(this), from, keyId, 1, "");
+    
+    return this.onERC1155Received.selector;
+}
+```
