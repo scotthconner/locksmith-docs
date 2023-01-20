@@ -14,7 +14,7 @@ The contract works by taking an event description from a root key holder, along 
 
 When the key holder attests to the event, the `KeyOracle` contract fires the event on the `TrustEventLog`, enabling its state to be reflected to `Scribes` and other programs.
 
-<figure><img src="../../.gitbook/assets/Locksmith Architecture - Page 4 (3) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/Locksmith Architecture - Page 4 (3).png" alt=""><figcaption></figcaption></figure>
 
 ## Storage
 

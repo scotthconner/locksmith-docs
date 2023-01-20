@@ -121,11 +121,169 @@ This modifier is used for methods that require the message sender holds `keyId` 
  * holds the key required for the given locksmith.
  */
  modifier requiresKey(uint256 key) {
-        assert(keyInitialized);
-        require(IERC1155(ILocksmith(locksmith).getKeyVault()).balanceOf(msg.sender, key) > 0,
-            'INVALID_OPERATOR');
-        _;
-    }solid
+     assert(keyInitialized);
+     require(IERC1155(ILocksmith(locksmith).getKeyVault()).balanceOf(msg.sender, key) > 0,
+         'INVALID_OPERATOR');
+     _;
+ }
+```
+
+#### send
+
+This method is called by the key holder when they want to send the gas token from a collateral provider to another specific address outside of the trust model. This operations is logically equivalent to sending ether from Metamask to another address, but doing so from within the virtual wallet identity.
+
+```solidity
+/**
+ * send
+ *
+ * @param provider the provider address to withdrawal from.
+ * @param amount   the raw gwei count to send from the wallet.
+ * @param to       the destination address where to send the funds
+ */
+function send(address provider, uint256 amount, address to) external requiresKey(keyId) {
+     // make sure we have enough allowance for the transaction,
+     // and leave the allowance as it was before.
+     prepareWithdrawalAllowance(provider, ethArn, amount);
+
+     // disable deposits for ether. the money coming back will be used
+     // to send as a withdrawal from the trust account
+     depositHatch = true;
+
+     // withdrawal the amount into this contract
+     ICollateralProvider(provider).arnWithdrawal(keyId, ethArn, amount);
+
+     // re-enable deposits on ether
+     depositHatch = false;
+
+     // and send it from here, to ... to.
+     (bool sent,) = to.call{value: amount}("");
+     assert(sent); // failed to send ether.
+
+     // record and emit entry
+     logTransaction(TxType.SEND, to, provider, ethArn, amount);
+}
+```
+
+**receive**
+
+This method acts as a callback when someone sends the virtual address ether. In this case, the contract takes the designated default ether collateral provider and deposits it directly into the vaults.
+
+```solidity
+receive() external payable {
+    // don't deposit the money if this is a result
+    // of a withdrawal.
+    if (depositHatch) { return; }
+
+    // deposit the entire message balance to default collateral provider
+    defaultEthDepositProvider.deposit{value: msg.value}(keyId);
+
+    // record and emit entry
+    logTransaction(TxType.RECEIVE, address(this),
+        address(defaultEthDepositProvider), ethArn, msg.value);
+}
+```
+
+#### sendToken
+
+This process is nearly identical to `send()`, however, uses the ERC20 standard and the `ICollateralProvider` `arnWithdrawal` interface to facilitate sending ERC20s.
+
+```solidity
+/**
+ * sendToken
+ *
+ * @param provider the provider address to withdrawal from.
+ * @param token    the contract address of the ERC-20 token.
+ * @param amount   the amount of ERC20 to exchange
+ * @param to       the destination address of the receiver
+ */
+ function sendToken(address provider, address token, uint256 amount, address to) external requiresKey(keyId) {
+     // calculate the arn for the token
+     bytes32 arn = AssetResourceName.AssetType({
+         contractAddress: token,
+         tokenStandard: 20,
+         id: 0
+     }).arn();
+
+     // make sure the allowance is unperterbed by this motion
+     prepareWithdrawalAllowance(provider, arn, amount);
+
+     // withdrawal the amount into this contract
+     ICollateralProvider(provider).arnWithdrawal(keyId, arn, amount);
+
+     // and send it from here, to ... to.
+     IERC20(token).transfer(to, amount);
+
+     // record and emit entry
+     logTransaction(TxType.SEND, to, provider, arn, amount);
+}
+```
+
+#### acceptToken
+
+Sending ERC20s do not enable a callback of an on-receive event. For traditional wallets, you also have to add unknown contract address to your wallet if they are not popular enough. Because of this, there is no protocol to automatically deposit ERC20s to a vault. Given a list of known contract addresses, it is possible for the VirtualKeyAddress user to detect tokens in their wallet and "accept" the token, in which the token is deposited into an ERC20 token provider attached to the trust.
+
+This also has the side effect of automatically keeping scam ERC20s away from your private keys and other funds.&#x20;
+
+```solidity
+function acceptToken(address token, address provider) external requiresKey(keyId) returns (uint256) {
+     ITokenCollateralProvider p = ITokenCollateralProvider(provider);
+
+     // calculate the arn for the token
+     bytes32 arn = AssetResourceName.AssetType({
+          contractAddress: token,
+          tokenStandard: 20,
+          id: 0
+     }).arn();
+
+     // how much has been here?
+     uint256 tokenBalance = IERC20(token).balanceOf(address(this));
+     require(tokenBalance > 0, 'NO_TOKENS'); // no reason to waste gas
+
+     // set the allowance for the vault to pull from here
+     IERC20(token).approve(provider, tokenBalance);
+
+     // deposit the tokens from this contract into the provider
+     p.deposit(keyId, token, tokenBalance);
+
+     // invariant control, we shouldn't have any tokens left
+     assert(IERC20(token).balanceOf(address(this)) == 0);
+
+     // record and emit entry
+     // note: this will record the "operator" as the key-holder
+     //       and not the person sending it. It's not entirely
+     //       accurate but solving this problem requires off-chain.
+     logTransaction(TxType.RECEIVE, address(this), provider, arn, tokenBalance);
+
+     return tokenBalance;
+}
+
+```
+
+#### multicall
+
+#### prepareWithdrawalAllowance
+
+```solidity
+/**
+     * prepareWithdrawalAllowance
+     *
+     * For the requested provider, add the amount to the arn's
+     * withdrawal limit for the given key for the provider's
+     * associated notary.
+     *
+     * @param provider the address of the collateral provider
+     * @param arn      asset resource name to set the limit for
+     * @param amount   increase the allowance by this amount
+     */
+    function prepareWithdrawalAllowance(address provider, bytes32 arn, uint256 amount) internal {
+        ICollateralProvider p = ICollateralProvider(provider);
+        address ledger = p.getTrustedLedger();
+        INotary notary = INotary(ILedger(ledger).notary());
+
+        // cater the withdrawal allowance as to not be perterbed afterwards
+        uint256 currentAllowance = notary.withdrawalAllowances(ledger, keyId, provider, arn);
+        notary.setWithdrawalAllowance(ledger, provider, keyId, arn, currentAllowance + amount);
+    }
 ```
 
 ## PostOffice
