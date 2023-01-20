@@ -28,8 +28,3 @@
 
 * [🛤 Roadmap](team/roadmap.md)
 * [🛠 About the Team](fundamentals/getting-set-up/README.md)
-
-## Use Cases
-
-* [🎨 For Designers](use-cases/for-designers.md)
-* [🖥 For Developers](use-cases/for-developers.md)
