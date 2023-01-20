@@ -18,11 +18,11 @@
   * [🪙 Token Vault](architecture/collateral-providers/token-vault.md)
   * [🛡 Trustee](architecture/scribes/trustee.md)
 * [⚡ Event Dispatch](architecture/events/README.md)
-  * [📜 Event Log](architecture/event-dispatch/event-log.md)
+  * [📜 Event Log](architecture/events/event-log.md)
   * [👁🗨 Key Oracle](architecture/events/key-oracle.md)
   * [⏰ Alarm Clock](architecture/events/alarm-clock.md)
 * [🕵 Agents](architecture/agents/README.md)
-  * [📬 Virtual Key Address](architecture/agents/virtual-key-address.md)
+  * [📬 Virtual Key Address](architecture/agents/wallet-creator.md)
 
 ## Team
 

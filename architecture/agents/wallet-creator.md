@@ -14,6 +14,10 @@ This contract can use any funds from any asset the key as rights to in single or
 
 The contract achieves and maintains the authorization and security by requiring a **soulbound** **key** to be attached to the contract so the contract can act as a definitive key holder with collateral providers and the `Notary`. For non-receive functions, both the caller and the contract must hold the same identity key.
 
+<figure><img src="../../.gitbook/assets/Locksmith Architecture - Page 4 (4).png" alt=""><figcaption><p>Sending funds only requires gas and a key in the traditional wallet.</p></figcaption></figure>
+
+<figure><img src="../../.gitbook/assets/Locksmith Architecture - Page 4 (6).png" alt=""><figcaption><p>Sending funds to the contracts works like a traditional walet, mostly.</p></figcaption></figure>
+
 The VirtualKeyAddress has further extendability to be able to:
 
 * Block senders or receivers based on address.
@@ -104,6 +108,25 @@ The on-chain storage for this wallet's transaction history.
 The number of transactions recorded in the history.
 
 ### Operations
+
+#### requiresKey
+
+This modifier is used for methods that require the message sender holds `keyId` according to the `locksmith`.
+
+```solidity
+/**
+ * requiresKey
+ *
+ * An internal implementation that ensures that the operator
+ * holds the key required for the given locksmith.
+ */
+ modifier requiresKey(uint256 key) {
+        assert(keyInitialized);
+        require(IERC1155(ILocksmith(locksmith).getKeyVault()).balanceOf(msg.sender, key) > 0,
+            'INVALID_OPERATOR');
+        _;
+    }solid
+```
 
 ## PostOffice
 
