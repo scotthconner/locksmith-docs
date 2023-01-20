@@ -225,6 +225,12 @@ Sending ERC20s do not enable a callback of an on-receive event. For traditional 
 This also has the side effect of automatically keeping scam ERC20s away from your private keys and other funds.&#x20;
 
 ```solidity
+/**
+ * acceptToken
+ *
+ * @param token    the contract address of the token to accept
+ * @param provider the collateral provider you want to sweep the funds to
+ */ 
 function acceptToken(address token, address provider) external requiresKey(keyId) returns (uint256) {
      ITokenCollateralProvider p = ITokenCollateralProvider(provider);
 
@@ -261,38 +267,187 @@ function acceptToken(address token, address provider) external requiresKey(keyId
 
 #### multicall
 
+This method allows the key holder to call in and dynamically orchestrate multiple calls as a virtual identity. The key holder first prepares funds into the contract by specifying which assets should be made available. Then, once in the contract, the funds can be used by calls to execute as an abstracted account. This includes things like single-transaction swaps on Uniswap, among basically anything else valuable an account would want to do and compress into a single transaction.
+
+<pre class="language-solidity"><code class="lang-solidity"><strong> /**
+</strong><strong>  * multicall
+</strong><strong>  *
+</strong><strong>  * @param assets    the assets you want to use for the multi-call
+</strong>  * @param calls     the calls you want to make
+  */
+<strong>function multicall(FundingPreparation[] calldata assets, Call[] calldata calls) payable requiresKey(keyId) external {
+</strong>    // go through each funding preparation and
+    // dump the funds into this contract as needed.
+    depositHatch = true;
+    for(uint256 x = 0; x &#x3C; assets.length; x++) {
+        prepareWithdrawalAllowance(assets[x].provider, assets[x].arn, assets[x].amount);
+        ICollateralProvider(assets[x].provider)
+            .arnWithdrawal(keyId, assets[x].arn, assets[x].amount);
+
+        // record and emit entry
+        logTransaction(TxType.ABI, address(this),
+            assets[x].provider, assets[x].arn, assets[x].amount);
+    }
+    depositHatch = false;
+        
+    // generate each target call, and go!
+    // Warning: This is re-entrant!!!!
+    for(uint y = 0; y &#x3C; calls.length; y++) {
+        // let's make sure the target is not the locksmith.
+        // we don't want to enable automating permissions at root
+        // mid-transaction. the call interface should prevent
+        // callData from delegating with the keyholder being the caller.
+        require(locksmith != calls[y].target, 'INVARIANT_CONTROL');
+
+        (bool success,) = payable(calls[y].target).call{value: calls[y].msgValue}(calls[y].callData);
+        assert(success);
+    }
+}
+</code></pre>
+
 #### prepareWithdrawalAllowance
+
+This is an internal method that is used muiltiple places to ensure that withdrawals from storage providers are properly authorized at the `Notary`. Without this, the ledger will fail to notarize the transaction because the collateral provider isn't cleared to facilitate a transaction.
 
 ```solidity
 /**
-     * prepareWithdrawalAllowance
-     *
-     * For the requested provider, add the amount to the arn's
-     * withdrawal limit for the given key for the provider's
-     * associated notary.
-     *
-     * @param provider the address of the collateral provider
-     * @param arn      asset resource name to set the limit for
-     * @param amount   increase the allowance by this amount
-     */
-    function prepareWithdrawalAllowance(address provider, bytes32 arn, uint256 amount) internal {
-        ICollateralProvider p = ICollateralProvider(provider);
-        address ledger = p.getTrustedLedger();
-        INotary notary = INotary(ILedger(ledger).notary());
+ * prepareWithdrawalAllowance
+ *
+ *
+ * @param provider the address of the collateral provider
+ * @param arn      asset resource name to set the limit for
+ * @param amount   increase the allowance by this amount
+ */
+ function prepareWithdrawalAllowance(address provider, bytes32 arn, uint256 amount) internal {
+    ICollateralProvider p = ICollateralProvider(provider);
+    address ledger = p.getTrustedLedger();
+    INotary notary = INotary(ILedger(ledger).notary());
 
-        // cater the withdrawal allowance as to not be perterbed afterwards
-        uint256 currentAllowance = notary.withdrawalAllowances(ledger, keyId, provider, arn);
-        notary.setWithdrawalAllowance(ledger, provider, keyId, arn, currentAllowance + amount);
-    }
+    // cater the withdrawal allowance as to not be perterbed afterwards
+    uint256 currentAllowance = notary.withdrawalAllowances(ledger, keyId, provider, arn);
+    notary.setWithdrawalAllowance(ledger, provider, keyId, arn, currentAllowance + amount);
+}
 ```
 
 ## PostOffice
 
+The Post Office is a simple singleton mapping of KeyIDs to their associated Virtual Key Address contract addresses. This ensures that root key holders can find their trust's inbox addresses easily, and to prevent multiple inboxes per key.
+
 ### Storage
 
+```solidity
+address public locksmith;
 
+// is an inbox address registered already?
+mapping(address => bool) private inboxes;
+
+// which address, if any, is the virtual inbox for a specific key ID?
+mapping(uint256 => address) private keyIdentityInboxes;
+
+// what are all the inboxes a key holder claims to own?
+// ownership could easily rug on the factoried contract and
+// leave this stale, but that would be a bug that could
+// also be detected and explained as to how that happened.
+// keyId => [inbox]
+mapping(uint256 => EnumerableSet.AddressSet) private ownerKeyInboxes;
+```
+
+#### locksmith
+
+The refernce to the locksmith that is used to verify key possession.
+
+#### inboxes
+
+An index mapping of each address to whether or not it is a valid inbox registered with the Post Office.
+
+#### keyIdentityInboxes
+
+For each Key that has an inbox, what is it's address?
+
+#### ownerKeyInboxes
+
+Find the key inboxes that are owned by an individual key. A key (like root), can own many inboxes. Ownership is separate from the inbox "identity" (`keyId`)
 
 ### Operations
+
+There are two introspection methods, `getInboxesForKey()`, and `getKeyInboxes()` which will not be covered in depth. They facilitate seeing what inbox addresses are owned by a given key, and what contract address exists, if any, for a given key Id.
+
+#### registerInbox
+
+This method is called by the inbox owner, who must be root, to register with the Post Office. The VirtualKeyAddress must already be deployed and configured.
+
+Most of the work is to ensure that the request is valid. The address must be a unique address and identity key. The virtual address contract must also be owned by a root key, that the message sender also holds. The key identity for the virtual address needs to be a key within the root key's trust.
+
+```solidity
+/**
+ * registerInbox
+ *
+ * @param inbox the address of the inbox to register.
+ */
+function registerInbox(address payable inbox) external {
+    // make sure the inbox isn't already registered
+    require(!inboxes[inbox], 'DUPLICATE_ADDRESS_REGISTRATION');
+
+    // determine what key the inbox thinks its owned by
+    uint256 ownerKey = IVirtualAddress(inbox).ownerKeyId();
+    uint256 keyId = IVirtualAddress(inbox).keyId();
+
+    // ensure that the owner key is a root key, and that
+    // the keyId is within the ring.
+    (bool ownerValid,, uint256 ownerTrustId, bool ownerIsRoot,) = ILocksmith(locksmith).inspectKey(ownerKey);
+    (bool targetValid,, uint256 targetTrustId,,) = ILocksmith(locksmith).inspectKey(keyId);
+    require(ownerValid && ownerIsRoot, 'OWNER_NOT_ROOT');
+    require(targetValid && (targetTrustId == ownerTrustId), 'INVALID_INBOX_KEY');
+
+    // ensure that the message sender is holding the owner key
+    require(IKeyVault(ILocksmith(locksmith).getKeyVault()).keyBalanceOf(msg.sender, ownerKey, false) > 0,
+        'KEY_NOT_HELD');
+
+    // make sure the key isn't already registered
+    require(keyIdentityInboxes[keyId] == address(0), 'DUPLICATE_KEY_REGISTRATION');
+
+    // register the inbox
+    inboxes[inbox] = true;
+    ownerKeyInboxes[ownerKey].add(inbox);
+    keyIdentityInboxes[keyId] = inbox;
+
+    emit addressRegistrationEvent(InboxEventType.ADD, msg.sender, ownerKey, inbox);
+}
+```
+
+#### deregisterInbox
+
+There may be circumstances where an inbox will want to be removed. This will remove the inbox from the index. This may be in the case where no upgrade path exists for a given virtual address implementation, so it may need to be fully replaced.
+
+```solidity
+/**
+ * deregisterInbox
+ *
+ * @param ownerKeyId the key holder that once claimed to own it
+ * @param inbox      the address of the IVirtualAddress to deregister
+ */
+function deregisterInbox(uint256 ownerKeyId, address payable inbox) external {
+    // fail if the inbox isn't registered
+    require(inboxes[inbox], 'MISSING_REGISTRATION');
+
+    // fail if the inbox's keyID doesn't match the registraton
+    uint256 keyId = IVirtualAddress(inbox).keyId();
+    require(keyIdentityInboxes[keyId] == inbox, 'CORRUPT_IDENTITY');
+
+    // fail if the message sender isn't holding the key
+    require(IKeyVault(ILocksmith(locksmith).getKeyVault()).keyBalanceOf(msg.sender, ownerKeyId, false) > 0,
+        'KEY_NOT_HELD');
+
+    // we don't actually care if they still own the inbox on-chain,
+    // just that they want to de-register a valid entry for *them*
+    require(ownerKeyInboxes[ownerKeyId].remove(inbox), 'REGISTRATION_NOT_YOURS');
+
+    // clean up the bit table
+    inboxes[inbox] = false;
+    keyIdentityInboxes[keyId] = address(0);
+    emit addressRegistrationEvent(InboxEventType.REMOVE, msg.sender, ownerKeyId, inbox);
+}
+```
 
 ## KeyAddressFactory
 
