@@ -16,13 +16,13 @@
 * [💎 Collateral](architecture/collateral-providers/README.md)
   * [🔷 Ether Vault](architecture/collateral-providers/ether-vault.md)
   * [🪙 Token Vault](architecture/collateral-providers/token-vault.md)
-  * [📜 Event Log](architecture/events/event-log.md)
   * [🛡 Trustee](architecture/scribes/trustee.md)
 * [⚡ Event Dispatch](architecture/events/README.md)
+  * [📜 Event Log](architecture/event-dispatch/event-log.md)
   * [👁🗨 Key Oracle](architecture/events/key-oracle.md)
   * [⏰ Alarm Clock](architecture/events/alarm-clock.md)
 * [🕵 Agents](architecture/agents/README.md)
-  * [🧙♂ Wallet Creator](architecture/agents/wallet-creator.md)
+  * [📬 Virtual Key Address](architecture/agents/virtual-key-address.md)
 
 ## Team
 
