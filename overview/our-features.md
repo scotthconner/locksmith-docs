@@ -18,27 +18,25 @@ A novel solution would then have the following traits:
 
 ## Introducing Locksmith Smart Wallet
 
-The Locksmith Virtual Smart Wallet uses semi-fungible NFTs for role based access control and stores your assets on-chain.&#x20;
+The Locksmith Virtual Smart Wallet is an on-chain smart contract wallet that uses semi-fungible tokens (SFT) for role based access control.
 
-By receiving possession of a Locksmith Key, you gain access to a virtual wallet. In its most simple incarnation you can use these NFTs to access your funds on desktop, mobile, or a hardware wallet without sharing the same private key between devices.
+Possessing a Locksmith ERC1155 Token allows access to a virtual wallet. In its most simple incarnation, you can use multiple copies of a single SFT to access your funds on desktop, mobile, or a hardware wallet without sharing the same private key between devices.
 
-In essence it acts similar to an on-chain Bank Account, where NFT possession in a "traditional" wallet is akin to holding a credit card. In this way, Locksmith Wallet doesn't replace your existing wallet, but compliments it. This enables users of Metamask, Coinbase Wallet, WalletConnect, or any other wallet to adopt the Locksmith security paradigm without switching preferred or trusted wallet experiences, installing a new mobile app, or even generating a new private key to manage.
+Locksmith Wallet doesn't replace your existing wallet, but compliments it. This enables users of Metamask, Coinbase Wallet, WalletConnect, or any other wallet to adopt the Locksmith security paradigm without switching preferred or trusted wallet experiences, installing a new mobile app, or even generating a new private key to manage.
 
 <figure><img src="../.gitbook/assets/Locksmith Architecture - Compliment.png" alt=""><figcaption></figcaption></figure>
 
-Users hold Locksmith Keys (NFTs) in their traditional wallet. These NFTs act as a tokenized gate to virtualized wallet functionality configured by the wallet owner.
-
 This enables a host of unique features that address pain-points of today's wallets:
 
-1. **Private Key Agnostic:** Locksmith wallet actions require valid possession of the proper NFT "Key." Externally Owned Address (EOA) or Contract Address (CA) actors can access the wallet similarly as long as their public address holds the proper NFT key. This in essence enables many valuable features of [account abstraction](https://blog.pantherprotocol.io/ethereum-account-abstraction-everything-you-need-to-know/), including keeping a single on-chain identity regardless of which wallet or private key you use. The NFTs can also be optionally and mutably "[soul-bound](https://vitalik.ca/general/2022/01/26/soulbound.html)" to a specific address to prevent phishing, exploits, scams, pawning, or loaning against. The importance of any one individual private key diminishes as long as you can maintain control of your root NFT.&#x20;
-2. **Operational Security:** Separate fund access between cold wallets and hot wallets with mediator identities that only have the permission to move funds from one NFT to another, but not to their own or anyone else. Allows for "air-locked" access to funds and feature sets.
-3. **Mutli-User Wallets, Social Recovery:**  Semi-fungible NFTs enable multiple copies of keys to be minted. This allows multiple EOAs or CAs to control the same permission, and enables the wallet owner to mint multiple permissions used by different actors. Can be used to model quorum elections using Key Event requirements for permission access.
+1. **Private Key Agnostic:** Locksmith wallet actions require valid possession of the proper SFT "Key." Externally Owned Address (EOA) or Contract Address (CA) actors can access the wallet similarly as long as their public address holds the proper SFT key. This in essence enables many valuable features of [account abstraction](https://blog.pantherprotocol.io/ethereum-account-abstraction-everything-you-need-to-know/), including keeping a single on-chain identity regardless of which wallet app or private key you use. The SFTs can also be optionally and mutably "[soul-bound](https://vitalik.ca/general/2022/01/26/soulbound.html)" to a specific address to prevent phishing, exploits, scams, pawning, or loaning against. The importance of any one individual private key diminishes as long as you can maintain control of your root SFT.&#x20;
+2. **Operational Security:** Separate fund access between cold wallets and hot wallets with mediator identities that only have the permission to move funds from one AFT to another, but not to their own or anyone else. Allows for "air-locked" access to funds and feature sets.
+3. **Mutli-User Wallets, Social Recovery:**  SFTs enable multiple copies of keys to be minted. This allows multiple EOAs or CAs to control the same permission, and enables the wallet owner to mint multiple permissions used by different actors. Can be used to model quorum elections using Key Event requirements for permission access.
 4. **Distributed Asset Management:** Assets no longer have to reside at a singular EOA or CA address, but rather can be composed and orchestrated across any trusted collateral provider with unique management or investment features.
 5. **Automation:** Funds and permissions can be safely transferred, made available for specific recipients, and spent from the wallet without requiring the immediate signature or associated gas fees from the wallet owner.
 6. **Deposit Control:** Prevent deposits, dusts, and scams from specific senders or token types.
 7. **Open Development:** Commitment to composability enables developers to build and extend the wallet API to provide further automation and features on-chain and without permission.
 
-The Locksmith Wallet's application of semi-fungible NFTs, on-chain collateral storage, and account abstraction produce a secure, configurable, and extensible wallet experience and platform to compliment all existing wallet solutions in the market.
+The Locksmith Wallet's application of SFTs, on-chain collateral storage, and account abstraction produce a secure, configurable, and extensible wallet experience and platform to compliment all existing wallet solutions in the market.
 
 ### Key Management
 
