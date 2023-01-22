@@ -38,7 +38,7 @@ This enables a host of unique features that address pain-points of today's walle
 
 The Locksmith Wallet's application of SFTs, on-chain collateral storage, and account abstraction produce a secure, configurable, and extensible wallet experience and platform to compliment all existing wallet solutions in the market.
 
-### Permission Management
+### Key Management
 
 The Locksmith Wallet provides access to deposits, withdrawal, distributions, delegation access, dApp interactions, and event triggering through the valid possession of a specific [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) NFT token minted by the wallet owner.
 
@@ -51,7 +51,7 @@ The wallet is created when a user mints their own **root** key. A root key holde
 
 Keys can be held by end users in traditional wallets, hardware ledgers, browser plug-ins, or any on-chain contract willing to accept and hold it for use. The capabilities and permissions of the key are managed by the root key holder at all times. Any wallet or contract that supports holding ERC1155 tokens is eligible.
 
-### Collateral Management
+### Asset and Collateral Management
 
 The solution needs to support extensibility for all potential assets and business logic while maintaining security. The Locksmith Virtual Wallet provides a composable on-chain wallet protocol that maintains balances and access rights for all on-chain assets.
 
