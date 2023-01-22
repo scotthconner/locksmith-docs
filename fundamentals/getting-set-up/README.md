@@ -1,33 +1,13 @@
-# 🛠 Getting set up
+---
+description: One Man with a Plan
+---
 
-<details>
+# 🛠 About the Team
 
-<summary>Step1: Creating your organization</summary>
+The open Alpha was conceived, designed, coded, tested, and documented by **Scott H Conner.** Scott is a professional software engineering leader with over 20 years of programming experience.
 
+* [LinkedIn](https://www.linkedin.com/in/connersc/)
+* [Github](https://github.com/scotthconner)
+* [Twitter](https://twitter.com/scotthconner)
 
-
-</details>
-
-<details>
-
-<summary>Step 2: Inviting your team</summary>
-
-
-
-</details>
-
-<details>
-
-<summary>Step 3: Making your first post</summary>
-
-
-
-</details>
-
-<details>
-
-<summary>Step 4: Publishing a post</summary>
-
-
-
-</details>
+Scott has a degree in Computer Science and Mathematics from Virigina Tech, and has worked a IBM, Spiceworks, Amazon, Coinbase, and Protocol Labs.
