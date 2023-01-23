@@ -42,7 +42,7 @@ The Locksmith Wallet's application of SFTs, on-chain collateral storage, and acc
 
 The Locksmith Wallet provides access to deposits, withdrawal, distributions, delegation access, dApp interactions, and event triggering through the valid possession of a specific [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) NFT token minted by the wallet owner.
 
-The wallet is created when a user mints their own **root** key. A root key holder has unilateral permission to manage the full life-cycle of other keys for their wallet:
+The wallet is created when a user mints their own **root** key. A root key holder has unilateral permission to manage the full life-cycle of other keys for their wallet. The associated key collection is called a "trust."
 
 1. **Create:** Root key holders can create additional unique ERC-1155 keys to hold, or distribute to others, or embed into contracts.&#x20;
 2. **Copy:** Root key holders can copy any existing or extinct keys.
