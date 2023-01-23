@@ -10,7 +10,7 @@ The `VirtualKeyAddress` is a per-key-instance contract that gives each individua
 
 Operators have virtualized access to use all of the funds in the trust's collateral providers, and to external parties will see the `msg.sender` be the virtual address of the key's "inbox" and not the EOA account holding the key and signing the transaction.
 
-This contract can use any funds from any asset the key as rights to in single or multi-call transactions.
+This contract can use any funds from any asset the key has rights to for single or multi-call transaction.
 
 The contract achieves and maintains the authorization and security by requiring a **soulbound** **key** to be attached to the contract so the contract can act as a definitive key holder with collateral providers and the `Notary`. For non-receive functions, both the caller and the contract must hold the same identity key.
 
