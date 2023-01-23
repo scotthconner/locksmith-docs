@@ -16,7 +16,7 @@ The contract achieves and maintains the authorization and security by requiring 
 
 <figure><img src="../../.gitbook/assets/Locksmith Architecture - Page 4 (4).png" alt=""><figcaption><p>Sending funds only requires gas and a key in the traditional wallet.</p></figcaption></figure>
 
-<figure><img src="../../.gitbook/assets/Locksmith Architecture - Page 4 (6).png" alt=""><figcaption><p>Sending funds to the contracts works like a traditional walet, mostly.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/Locksmith Architecture - Page 4 (6).png" alt=""><figcaption><p>Sending funds to the contracts works like a traditional wallet.</p></figcaption></figure>
 
 The VirtualKeyAddress has further extendability to be able to:
 
