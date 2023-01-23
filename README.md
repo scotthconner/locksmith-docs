@@ -6,6 +6,8 @@ description: The Locksmith Wallet White Paper
 
 This document describes a virtual wallet that utilizes ERC-1155 NFT standards to model and secure permissions for an extensible on-chain smart wallet platform.
 
+An open access alpha is available on Goërli today at [https://locksmithwallet.com/](https://locksmithwallet.com/).
+
 ### Problem Statement
 
 Managing a private key remains a challenge for introductory and expert crypto asset users alike.&#x20;
