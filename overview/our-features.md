@@ -29,7 +29,7 @@ Locksmith Wallet doesn't replace your existing wallet, but compliments it. This 
 This enables a host of unique features that address pain-points of today's wallets:
 
 1. **Private Key Agnostic:** Locksmith wallet actions require valid possession of the proper SFT "Key." Externally Owned Address (EOA) or Contract Address (CA) actors can access the wallet similarly as long as their public address holds the proper SFT key. This in essence enables many valuable features of [account abstraction](https://blog.pantherprotocol.io/ethereum-account-abstraction-everything-you-need-to-know/), including keeping a single on-chain identity regardless of which wallet app or private key you use. The SFTs can also be optionally and mutably "[soul-bound](https://vitalik.ca/general/2022/01/26/soulbound.html)" to a specific address to prevent phishing, exploits, scams, pawning, or loaning against. The importance of any one individual private key diminishes as long as you can maintain control of your root SFT.&#x20;
-2. **Operational Security:** Separate fund access between cold wallets and hot wallets with mediator identities that only have the permission to move funds from one AFT to another, but not to their own or anyone else. Allows for "air-locked" access to funds and feature sets.
+2. **Operational Security:** Separate fund access between cold wallets and hot wallets with mediator identities that only have the permission to move funds from one SFT to another, but not to their own or anyone else. Allows for "air-locked" access to funds and feature sets.
 3. **Mutli-User Wallets, Social Recovery:**  SFTs enable multiple copies of keys to be minted. This allows multiple EOAs or CAs to control the same permission, and enables the wallet owner to mint multiple permissions used by different actors. Can be used to model quorum elections using Key Event requirements for permission access.
 4. **Distributed Asset Management:** Assets no longer have to reside at a singular EOA or CA address, but rather can be composed and orchestrated across any trusted collateral provider with unique management or investment features.
 5. **Automation:** Funds and permissions can be safely transferred, made available for specific recipients, and spent from the wallet without requiring the immediate signature or associated gas fees from the wallet owner.
@@ -38,7 +38,7 @@ This enables a host of unique features that address pain-points of today's walle
 
 The Locksmith Wallet's application of SFTs, on-chain collateral storage, and account abstraction produce a secure, configurable, and extensible wallet experience and platform to compliment all existing wallet solutions in the market.
 
-### Key Management
+### Permission Management
 
 The Locksmith Wallet provides access to deposits, withdrawal, distributions, delegation access, dApp interactions, and event triggering through the valid possession of a specific [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) NFT token minted by the wallet owner.
 
@@ -51,7 +51,7 @@ The wallet is created when a user mints their own **root** key. A root key holde
 
 Keys can be held by end users in traditional wallets, hardware ledgers, browser plug-ins, or any on-chain contract willing to accept and hold it for use. The capabilities and permissions of the key are managed by the root key holder at all times. Any wallet or contract that supports holding ERC1155 tokens is eligible.
 
-### Asset and Collateral Management
+### Collateral Management
 
 The solution needs to support extensibility for all potential assets and business logic while maintaining security. The Locksmith Virtual Wallet provides a composable on-chain wallet protocol that maintains balances and access rights for all on-chain assets.
 
