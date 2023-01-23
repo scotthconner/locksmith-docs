@@ -81,7 +81,7 @@ A marketplace of collateral providers can now offer to hold, deposit, and facili
 
 #### Scribes
 
-Root key holders can enable other contracts to move funds between wallet keys by trusted a contract called a Scribe. By default, the platform includes a program that enables a specific key-holder to move funds from one wallet key key to a restricted list of keys, called "Trustee".
+Root key holders can enable other contracts to move funds between wallet keys by trusting a contract called a Scribe. By default, the platform includes a program that enables a specific key-holder to move funds from one wallet key key to a restricted list of keys, called "Trustee".
 
 The programatic interface between the notary and the ledger is robust enough to easily handle additional use cases deployed as a single permission-less smart contract:
 
