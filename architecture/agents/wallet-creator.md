@@ -12,7 +12,7 @@ Operators have virtualized access to use all of the funds in the trust's collate
 
 This contract can use any funds from any asset the key has rights to for single or multi-call transaction.
 
-The contract achieves and maintains the authorization and security by requiring a **soulbound** **key** to be attached to the contract so the contract can act as a definitive key holder with collateral providers and the `Notary`. For non-receive functions, both the caller and the contract must hold the same identity key.
+The contract achieves and maintains the authorization and security by requiring a **soulbound** **key** to be attached to the contract so the contract can act as a definitive key holder with collateral providers and the `Notary`. For non-receive functions, both the caller and the contract must hold the same identity key.&#x20;
 
 <figure><img src="../../.gitbook/assets/Locksmith Architecture - Page 4 (4).png" alt=""><figcaption><p>Sending funds only requires gas and a key in the traditional wallet.</p></figcaption></figure>
 
@@ -26,15 +26,15 @@ The VirtualKeyAddress has further extendability to be able to:
 
 This functionality is a trio of three contracts.
 
-* VirtualKeyAdress: The per-instance contract that enables each key to have a unique address and provides key security.&#x20;
+* VirtualKeyAddress: The per-instance contract that enables each key to have a unique address and provides key security.&#x20;
 * PostOffice: This is a registry that maintains a mapping of key IDs to contract addresses. This enables discoverability and management for UX. It also helps the root key holder from creating duplicate key addresses by accident.
-* KeyAddressFactory: This agent takes possession of a root key long enough to create a copy o the required key, create the inbox, soulbind the new key to the inbox address, and register it with the post office. The root key is given back to the message sender at the end of the transaction.
+* KeyAddressFactory: This agent takes possession of a root key long enough to create a copy of the required key, deploy the inbox contract, soulbind the new key to the inbox address, and register it with the post office. The root key is given back to the message sender at the end of the transaction.
 
 ## VirtualKeyAddress
 
 ### Storage
 
-The virtualized wallet keeps an internal model of the transaction history on-chain. It is modeled as such.
+The virtualized wallet keeps an internal model of the transaction history on-chain. It is modeled as such. One thing to note is receives of ERC20s will be upon "accept" because there is no reliable callback protocol.
 
 <pre class="language-solidity"><code class="lang-solidity">enum TxType { INVALID, SEND, RECEIVE, ABI }
 <strong>
@@ -52,7 +52,7 @@ The virtualized wallet keeps an internal model of the transaction history on-cha
 The contract storage is as follows:
 
 ```solidity
-bytes32 public ethArn;
+bytes32 public ethArn; // what is the native gas arn?
 
 // owner and identity management
 uint256 public ownerKeyId;     // the owner of this contract
@@ -67,21 +67,22 @@ bool    public depositHatch; // this is used to prevent withdrawals from trigger
 address public locksmith;
 
 // chain storage for transaction history
+// this is gas heavy and might warrant an optional disable flag
 Transaction[] public transactions;
 uint256 public transactionCount;
 ```
 
 #### ethArn
 
-Computed at initialization, stores the ethArn for easy use.
+Computed at initialization, stores the ethArn for easy use. Native gas is handled differently than tokens.
 
 #### ownerKeyId
 
-This is the key ID from the locksmith that legitimately owns the contract and is the only one who can upgrade it.
+This is the key ID that legitimately owns the contract and is the only one who can upgrade it. The locksmith reference is the source of truth.
 
 #### keyId
 
-This is the key ID that the contract assumes the identity of. It will require that for operations that use vaulted collateral to hold this key for successful operation. The contract aslo assumes that a key with this ID is soulbound to the contract given it the authority to act as a key holder on behalf of the caller.
+This is the key ID that the contract assumes the identity of. It will require that for operations that use vaulted collateral to hold this key for successful operation. The contract also assumes that a key with this ID is soulbound to the contract giving it the authority to act as a key holder on behalf of the caller.
 
 #### keyInitialized
 
