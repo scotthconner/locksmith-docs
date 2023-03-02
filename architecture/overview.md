@@ -6,6 +6,8 @@ description: A Smart Contract Wallet Architecture Summary
 
 There are a few design considerations that were made early on that heavily influence the approaches taken that need to be considered.
 
+Locksmith is an alternative path to account abstraction that avoids the centralization risks of ERC 4337. Rather than introduce off-chain mempools and centralized relayers, ERC 1155 keys provide a more elegant short-term solution until EIP 3074 is implemented at the protocol level. In many ways, Locksmith is a “pre-EIP 3074” wallet.
+
 ## Design Considerations
 
 ### Infrastructure
