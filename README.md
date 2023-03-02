@@ -10,18 +10,12 @@ An open access alpha is available on Goërli today at [https://locksmithwallet.c
 
 ### Problem Statement
 
-Managing a private key remains a challenge for introductory and expert crypto asset users alike.&#x20;
+The binary nature of custody is a constant risk in the world of Web 3. Billions of dollars in crypto are lost every year by individuals, exchanges, and crypto companies due to hacks and private key mismanagement. Protecting and sharing keys safely is a significant problem many firms are trying to solve, but balancing security and usability is a persistent challenge. &#x20;
 
-If a user is simply buying and holding crypto assets for a long time it could entail safely operating a Ledger or managing the security and legibility of written seed phrases. Fear of a damaged Ledger, house fire, flood, or hard-drive crash still motivates many users to hold their assets on centralized exchanges.
+Power users that put up with the difficult UX of DeFi are well aware that private key management of multiple wallets is a logistical nightmare where any misstep can have major repercussions. Today, navigating crypto “safely” means managing multiple burner wallets and incompatible browser extensions that create an incoherent user experience.
 
-For more sophisticated users, managing crypto assets is harder. Keeping cold storage cold,  managing burner wallets and browser extensions, tracking funds across DeFi protocols, and interacting with new contracts safely all come with their own challenges and trade-offs.
+For the crypto-curious that just want to buy and hold, or maybe earn some passive yield, UX often takes precedence over self-custody. Fear of a lost piece of paper, damaged Ledger, house fire, flood, or hard-drive crash makes centralized exchanges and lending desks appear the safer option. Users are forced to trade piece of mind for centralization, KYC, withdrawal limits, and service level agreements.
 
-The private keys in both scenarios remain the critical challenge - specifically when bringing others into the picture. Introducing inheritance, DeFi vendors, payment services, decentralized teams, or even unscrupulous smart contract owners all increase the surface area of private key exposure and wallet risk.
+TradFi institutions are experimenting with blockchain but feel forced to use EVM forks and permissioned protocols to meet their regulatory and fiduciary responsibilities. These players are prepared to bring trillions into DeFi, but they are also the most risk adverse and conservative members of the ecosystem.&#x20;
 
-Solutions vary and some include removing the use of private key altogether. Examples include centralized exchanges, custodial outfits, and other wallets with off-chain identity verification techniques. These solutions allow for automation, but often come with operational trade-offs like centralization, KYC, withdrawal limits, or service level agreements.&#x20;
-
-Other solutions may encrypt and store your private key, offering retrieval and decrypt workflows with various features. Private key storage and retrieval isn't always flexible enough for some circumstances. For example, if a private key is compromised and the key holder has to switch their private key and move assets. Or, if proceeds in an inheritance scenario have multiple beneficiaries a third party must be trusted to properly distribute the assets according to a will.
-
-In both cases if the private key is compromised, the entire portfolio is compromised. For sophisticated users, this problem occurs with each active wallet in use. In both cases, you also have to trade-off between self-custody and programmability/automation.
-
-The pain of balancing usability with security persists for all crypto users.&#x20;
+Web 3 will never reach a billion users or fully onboard TradFi institutions until safety and control are crypto features–not aspirations.
