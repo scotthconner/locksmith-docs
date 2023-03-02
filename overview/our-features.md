@@ -4,118 +4,47 @@ description: An extensible on-chain smart wallet solution
 
 # 📽 Introduction
 
-## Solution Space
-
-In order to make progress on the usability and security challenges of managing crypto-based assets, we need to change the relationship between private keys and access to crypto assets.
-
-A novel solution would then have the following traits:
-
-1. **On-chain.** Do not rely on centralized off-chain actors, companies, custodial outfits, "Web2" based services, servers, or deployments for data storage, indexing, or transaction relaying.
-2. **Self custodial.** Maintain full control of and visibility into your assets at all times, where-ever they are, without enabling long standing approval permissions.
-3. **Recoverable.** Losing a private key, or leaving crypto-assets as inheritance through a will needs to be secure and reliable. This includes cases where assets are staked, locked up, loaned, borrowed, etc.
-4. **Secure.** Interacting with new experiences should not come with the risk of losing assets.
-5. **Extensible.** Users should not be limited in what they can do, and should enable others to securely interact with their funds. ****&#x20;
-
 ## Introducing Locksmith Smart Wallet
 
-The Locksmith Virtual Smart Wallet is an on-chain smart contract wallet that uses semi-fungible tokens (SFT) for role based access control.
+A secure, self-custodial, and user-friendly wallet is necessary for the evolution of the crypto industry. This is why we built the Locksmith smart wallet to transform self-custody into full-custody and every user’s wallet into a personal bank.  With an innovative [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) semi-fungible token (SFT) design, the security and benefits of account abstraction are here and now. Out of the box, Locksmith smart wallets offer:
 
-Possessing a Locksmith ERC1155 Token allows access to a virtual wallet. In its most simple incarnation, you can use multiple copies of a single SFT to access your funds on desktop, mobile, or a hardware wallet without sharing the same private key between devices.
+* Virtual addresses that unify all existing user wallets
+* Automated asset transfers (e.g., recurring payments)
+* Wallet recovery mechanisms
+* Multi-sig / MPC security with a single signature
+* Verifiable solvency of all collateral positions
+* Delegation of deposit, withdrawal, and dApp interaction permissions
+* Deposit control – no more unwanted dustings or airdrops
+* Multi-call transactions that bundle transaction to minimize gas fees
+* Powerful session keys that govern dApp transactions with complex logic (e.g., approve all swaps if and only if…)
+* “Invest at rest” to earn yield on passive funds
 
-Locksmith Wallet doesn't replace your existing wallet, but compliments it. This enables users of Metamask, Coinbase Wallet, WalletConnect, or any other wallet to adopt the Locksmith security paradigm without switching preferred or trusted wallet experiences, installing a new mobile app, or even generating a new private key to manage.
+With these features, we expect to reach brand new audiences with the benefits of self-custody and provide existing users newfound confidence on their crypto journeys. Every Locksmith wallet user can access a single, intuitive interface that meets their needs, whether they are a first time retail customer, crypto degen, or TradFi institution that is ready to embrace DeFi.
 
-<figure><img src="../.gitbook/assets/Locksmith Architecture - Compliment.png" alt=""><figcaption></figcaption></figure>
+Our insight is that overcoming the UX-security dilemma means changing the relationship between private keys and access to crypto assets. A priori, the ideal solution would have the following traits:
 
-This enables a host of unique features that address pain-points of today's wallets:
+1. **On-chain.** Does not rely on centralized off-chain actors, companies, custodial outfits, "Web2" based services, servers, or deployments for data storage, indexing, or transaction relaying.
+2. **Self-custodial.** Allows the user to maintain complete control of and visibility into their assets at all times.
+3. **Recoverable.** Negates the impact of lost private keys by providing the user a secure and reliable way to recover crypto assets. This includes cases where assets are staked, locked up, loaned, borrowed, etc.
+4. **Secure.** Ensures that interacting with new experiences never means putting the user’s assets at unnecessary or involuntary risk.
+5. **Extensible.** Allows users the freedom to deploy, transfer, and transact with their crypto assets with greater functionality than they encounter in traditional finance. This includes the ability to provide others with granular permissions over self-custodied funds.
 
-1. **Private Key Agnostic:** Locksmith wallet actions require valid possession of the proper SFT "Key." Externally Owned Address (EOA) or Contract Address (CA) actors can access the wallet similarly as long as their public address holds the proper SFT key. This in essence enables many valuable features of [account abstraction](https://blog.pantherprotocol.io/ethereum-account-abstraction-everything-you-need-to-know/), including keeping a single on-chain identity regardless of which wallet app or private key you use. The SFTs can also be optionally and mutably "[soul-bound](https://vitalik.ca/general/2022/01/26/soulbound.html)" to a specific address to prevent phishing, exploits, scams, pawning, or loaning against. The importance of any one individual private key diminishes as long as you can maintain control of your root SFT.&#x20;
-2. **Operational Security:** Separate fund access between cold wallets and hot wallets with mediator identities that only have the permission to move funds from one SFT to another, but not to their own or anyone else. Allows for "air-locked" access to funds and feature sets.
-3. **Mutli-User Wallets, Social Recovery:**  SFTs enable multiple copies of keys to be minted. This allows multiple EOAs or CAs to control the same permission, and enables the wallet owner to mint multiple permissions used by different actors. Can be used to model quorum elections using Key Event requirements for permission access.
-4. **Distributed Asset Management:** Assets no longer have to reside at a singular EOA or CA address, but rather can be composed and orchestrated across any trusted collateral provider with unique management or investment features.
-5. **Automation:** Funds and permissions can be safely transferred, made available for specific recipients, and spent from the wallet without requiring the immediate signature or associated gas fees from the wallet owner.
-6. **Deposit Control:** Prevent deposits, dusts, and scams from specific senders or token types.
-7. **Open Development:** Commitment to composability enables developers to build and extend the wallet API to provide further automation and features on-chain and without permission.
+No wallet or service in the market today meets all five criteria. By contrast, the Locksmith smart wallet assigns, tracks, and monitors the permissions of SFT holders, providing users with a virtual wallet that separates private keys from assets in a trustless, permissionless way. With Locksmith, you can move funds from cold storage to predetermined addresses or dApps without ever exposing the cold wallet private keys. You can use multiple copies of a single SFT to access funds on different desktop, mobile, and hardware wallets without sharing the same private key between devices. You can provide full control of assets to family members after a certain period of inactivity, as one might want to do for inheritance. And we believe this is just the beginning.
 
-The Locksmith Wallet's application of SFTs, on-chain collateral storage, and account abstraction produce a secure, configurable, and extensible wallet experience and platform to compliment all existing wallet solutions in the market.
+At its core, the Locksmith tech stack is a toolbox of novel smart contracts that are entirely composable into nearly any custody or DeFi use case. The primary functional features in the Locksmith smart wallet include:
 
-### Permission Management
+1. **SFT-based ownership:** Locksmith wallet actions require valid possession of the proper SFT "Key." These can take the form of “root keys” (the original) or “ring keys” (keys generated by the root key). The importance of any one individual private key diminishes as long as the user can maintain control of the root SFT, enabling many valuable features of[ account abstraction](https://blog.pantherprotocol.io/ethereum-account-abstraction-everything-you-need-to-know/).&#x20;
+2. **Programmable security:** Separate fund access between cold and hot wallets with mediator accounts that only have permission to move funds from one wallet to another. This allows for "air-locked" access to funds and feature sets. The SFTs can also be optionally and mutably "[soul-bound](https://vitalik.ca/general/2022/01/26/soulbound.html)" to a specific address to prevent phishing, exploits, scams, pawning, or unauthorized transfers.
+3. **Permissioned key minting:** SFTs enable multiple copies of keys to be minted. This enables the wallet owner to mint multiple permissions used by different actors, including permissions to restore funds to a newly generated address.
+4. **Open Development:** Commitment to composability enables developers to build and extend the wallet API to provide further automation and features on-chain and without permission.
 
-The Locksmith Wallet provides access to deposits, withdrawal, distributions, delegation access, dApp interactions, and event triggering through the valid possession of a specific [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155) NFT token minted by the wallet owner.
+That last point is significant. While Locksmith will launch with several applications built in (e.g., inheritance, account recovery, recurring payments), we’ve made the code open source and the wallet easily extensible. Any developer that wants to create additional features, build integrations, or offer new services on top of Locksmith is welcome to take part in the journey and benefit from the community. For users, we expect a steady stream of optional features and services that they can access from the Locksmith UI, bringing the incessant innovation of Web3 directly into their wallet.
 
-The wallet is created when a user mints their own **root** key. A root key holder has unilateral permission to manage the full life-cycle of other keys for their wallet. The associated key collection is called a "trust."
+Join us if you share our vision of a simpler, safer, and more powerful self-custody experience.&#x20;
 
-1. **Create:** Root key holders can create additional unique ERC-1155 keys to hold, or distribute to others, or embed into contracts.&#x20;
-2. **Copy:** Root key holders can copy any existing or extinct keys.
-3. **Burn:** They can burn any currently minted key in existence.&#x20;
-4. **Soulbind:** Root key holders can bind and unbind keys. Soulbound keys cannot be moved, sent, or stolen.
+Locksmith wallet does not replace your existing wallets; Metamask, Coinbase Wallet, WalletConnect, and every other EVM wallet can utilize our platform. We give your existing wallet superpowers. All you need to do is connect.
 
-Keys can be held by end users in traditional wallets, hardware ledgers, browser plug-ins, or any on-chain contract willing to accept and hold it for use. The capabilities and permissions of the key are managed by the root key holder at all times. Any wallet or contract that supports holding ERC1155 tokens is eligible.
-
-### Collateral Management
-
-The solution needs to support extensibility for all potential assets and business logic while maintaining security. The Locksmith Virtual Wallet provides a composable on-chain wallet protocol that maintains balances and access rights for all on-chain assets.
-
-It does this through multiple trusted platform actors: the Ledger and Notary, as well as actors trusted by the wallet owner: Collateral Providers and Scribes.
-
-**Ledger**
-
-All on-chain assets have a unique identifier called the Asset Resource Name (ARN).  It is a keccak256 hash of the contract address of the token (or 0x0 for gas), the token standard (20/721/1155/etc), and the token ID, and thus unique by asset type.
-
-All asset are tracked via their ARN, location, and Locksmith Key withdrawal rights.
-
-#### Notary
-
-Any assets that that are deposited, re-distributed to key-holders, or withdrawn must be approved by the wallet's programmable Notary**,** whose wishes are controlled by the root key holder.
-
-#### Collateral Providers
-
-The ledger tracks assets that are held at a specific trusted addresses, called Collateral Providers. The total balance for a given account is subdivided by the individual key withdrawal rights. By default, the platform supports:
-
-* Ether Vault - An on-chain Ethereum vault that takes deposits and services withdrawals for valid keys as determined by the wallet's ledger.
-* Token Vault - An on-chain ERC20 token vault that takes deposits and services withdrawals for valid keys as determined by the wallet's ledger.&#x20;
-* NFT Vaults (Coming soon) - ERC721 and 1155 NFT vaults. Enable wallet key deposit and transfers, hold NFTs and delegate airdrop registration claims, etc.
-
-Wallet users will trust individual collateral providers to their notary with a root key transaction, followed by the collateral provider claiming to have deposited funds on behalf of their wallet key. The wallet owner chooses which collateral provider to trust. All default Locksmith storage are secure and immutable smart contracts.
-
-A marketplace of collateral providers can now offer to hold, deposit, and facilitate asset transfer with their own contracts. This unlocks a singular wallet experience encompassing portfolio of financial activity that could be vaulted, collateralized, staked, or loaned out.
-
-#### Scribes
-
-Root key holders can enable other contracts to move funds between wallet keys by trusting a contract called a Scribe. By default, the platform includes a program that enables a specific key-holder to move funds from one wallet key key to a restricted list of keys, called "Trustee".
-
-The programatic interface between the notary and the ledger is robust enough to easily handle additional use cases deployed as a single permission-less smart contract:
-
-* **Key Recovery:** Enable users to claim a recipient address for a specific key with a given code word and with required key approvals.&#x20;
-* **Recurring Payments:** On a repeating time basis, move funds from one key to another given a sufficient key balance. Provide others mutable access to claim withdrawal rights from the appropriate collateral provider. Enable others to withdrawal securely from the origin of the funds. Unlocks allowance, timed inheritance, vesting schedules, monthly bill payments, etc.
-* **Cross-Trust Transfers:** Ability to transfer between keys across locksmith wallets. In this scenario, the sender and recipient are on the same ledger and can move funds between their own key rights without actually moving the funds on-chain at the collateral provider. This requires that both wallets have the same collateral provider trusted at the time of transaction.
-
-### Automation
-
-Standard wallets require your private key signature as well as funds in-wallet to send to someone else. While it's possible to withdrawal from on-chain exchanges directly to a recipient's address, today's world still ties the access to funds across on-chain repositories to public address and private key pairs.
-
-Locksmith wallet has created a few interfaces and patterns to enable your wallet to "work for you" while you are off-line and not signing transactions or spending gas that doesn't relying on centralized relayers. Collateral Providers and Scribes are composable interfaces that can be swapped out to provide the wallet with a different permission model, storage destination, or distribution scheme.
-
-To facilitate "offline" automation, the wallet API has provided a few patterns by default.
-
-#### Events
-
-Events are one-time triggers that acts a logic gate for wallet-related decisions. Event's are registered by trusted dispatchers, whom act under their own designs and circumstances to declare the event as happened.&#x20;
-
-In essence, events are a boolean oracle interface. By default the platform comes with the following dispatchers enabled, each designed to not require the wallet owner's interaction past set-up.
-
-* **Key Oracle:** The wallet's root key holder can register an event that is fired at the direct will of another key-holder's attestation. This places the full trust of that event's completion to every holder of the designated key. Used either in high-trust personal scenarios (EOA), or outsourced to other logic as a soulbound contract NFT (CA).
-* **Alarm Clock:** Set a date in the future when the alarm will be expired and can be challenged by _anyone_ willing to pay the gas for the transaction. A configurable "snooze" option can be enabled and guarded by requiring a specific key to snooze. Enables time-delay events, deadman switches, vesting schedules.
-
-To register for a wallet, a dispatcher only has to be explicitly trusted to the Notary by the root key holder. Any contract or EOA actor willing to register and fire events to the wallet's event log can participate.
-
-#### Agents
-
-Composability enables the ability to orchestrate workflows. Agents are a simple way of building small applications that result in novel wallet features.
-
-* **Virtual Wallet Addresses**: In-spite of where your assets are held, withdrawn, or sent from, continue to use a single public address for in and out-bound transactions.
-* **Multi-asset sends:** Send any mix of supported collateral and destinations in a single transaction, saving time and transaction inclusion overhead.
-* **Block Deposits:** Allow or deny list modes to control deposits based on sender or assets.
-* **Single Transaction workflows:** Either for initial wallet set-up or adding extensions, compact the steps into a single transaction.
+The remainder of this white paper outlines in detail the composability of the Locksmith smart wallet. Each section of the “Architectural overview” provides a non-technical introduction, followed by a technical discussion of the smart contracts that comprise the system architecture. We conclude with a summary of the design considerations and known trade-offs.&#x20;
 
 
 
