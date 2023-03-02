@@ -40,9 +40,9 @@ At its core, the Locksmith tech stack is a toolbox of novel smart contracts that
 
 That last point is significant. While Locksmith will launch with several applications built in (e.g., inheritance, account recovery, recurring payments), we’ve made the code open source and the wallet easily extensible. Any developer that wants to create additional features, build integrations, or offer new services on top of Locksmith is welcome to take part in the journey and benefit from the community. For users, we expect a steady stream of optional features and services that they can access from the Locksmith UI, bringing the incessant innovation of Web3 directly into their wallet.
 
-Join us if you share our vision of a simpler, safer, and more powerful self-custody experience.&#x20;
-
 Locksmith wallet does not replace your existing wallets; Metamask, Coinbase Wallet, WalletConnect, and every other EVM wallet can utilize our platform. We give your existing wallet superpowers. All you need to do is connect.
+
+Join us if you share our vision of a simpler, safer, and more powerful self-custody experience.&#x20;
 
 The remainder of this white paper outlines in detail the composability of the Locksmith smart wallet. Each section of the “Architectural overview” provides a non-technical introduction, followed by a technical discussion of the smart contracts that comprise the system architecture. We conclude with a summary of the design considerations and known trade-offs.&#x20;
 
